@@ -3,7 +3,7 @@ name: Deploy NestJS to DigitalOcean
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -27,7 +27,7 @@ jobs:
           script: |
             cd /home/ubuntu/shopify-quadcell-backend
             git reset --hard
-            git pull origin main
+            git pull origin master
             npm ci
             npm run build:css
             npx prisma generate
