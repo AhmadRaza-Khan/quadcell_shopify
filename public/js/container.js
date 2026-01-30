@@ -10,12 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
   setLoading(true, container)
   const dataMap = {
     "Today": "/order/orders-today",
-    "Failed": "/order/orders-failed",
     "All": "/order/orders-all",
     "E-Sims": "/sim/e-sims",
     "P-Sims": "/sim/p-sims",
     "IMSI TYPE 45400": "/product/imsi-45400",
-    "IMSI TYPE 45407": "/product/imsi-45407",
+    "IMSI TYPE 45407": "/product/imsi-45407"
   };
 
   const links = document.querySelectorAll("ul.menu li ul li a")

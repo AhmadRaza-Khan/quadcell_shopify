@@ -13,9 +13,9 @@
 
     <!-- modal -->
 <dialog id="prod_modal" class="modal">
-  <div class="modal-box">
+  <div class="modal-box shadow-lg shadow-[#00ffff]">
     <form method="dialog">
-      <button id="close-btn" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      <button id="close-btn" class="btn btn-md btn-circle btn-ghost z-50 absolute right-2 top-2">✕</button>
     </form>
 
         <!-- card -->
@@ -28,17 +28,16 @@
         <ul id="sidebarcomp" class="menu border-r w-56 hidden lg:block xl:block 2xl:block">
         <li class="text-xl ml-2">Navigations</li>
         <li>
-            <details open>
+            <details close>
             <summary class="">Orders</summary>
             <ul>
                 <li><a>Today</a></li>
-                <li><a>Failed</a></li>
                 <li><a>All</a></li>
             </ul>
             </details>
         </li>
         <li>
-            <details open>
+            <details close>
             <summary class="">Sims</summary>
             <ul>
                 <li><a>E-Sims</a></li>
@@ -48,11 +47,21 @@
         </li>
         
         <li>
-            <details open>
+            <details close>
             <summary class="">Products</summary>
             <ul>
                 <li><a>IMSI TYPE 45400</a></li>
                 <li><a>IMSI TYPE 45407</a></li>
+            </ul>
+            </details>
+        </li>
+
+        <li>
+            <details close>
+            <summary class="">Actions</summary>
+            <ul>
+                <li><button id="add-sim">Add New Sim</button></li>
+                <!-- <li><button id="add-plan">Add New Plan</button></li> -->
             </ul>
             </details>
         </li>

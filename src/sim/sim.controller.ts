@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { SimService } from './sim.service';
+import { UploadSimDto } from './dto';
 
 @Controller('sim')
 export class SimController {
@@ -15,5 +16,10 @@ export class SimController {
     @Get('p-sims')
     async getAllPsims() {
         return this.service.getPsims();
+    }
+
+    @Post('upload')
+    async uploadSim(@Body() simDto: UploadSimDto) {
+        return this.service.uploadNewSim(simDto);
     }
 }
