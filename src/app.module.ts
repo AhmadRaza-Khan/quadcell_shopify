@@ -13,6 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { SubscriberModule } from './subscriber/subscriber.module';
 import { QuadcellCryptoModule } from './qc-crypto/qc-crypto.module';
 import { SimModule } from './sim/sim.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SimModule } from './sim/sim.module';
     SubscriberModule,
     QuadcellCryptoModule,
     SimModule,
+    OrderModule
   ],
   providers: [ProductService],
   controllers: [ProductController],

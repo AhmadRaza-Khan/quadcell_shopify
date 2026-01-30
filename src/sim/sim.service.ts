@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import * as fs from 'fs';
 import { join } from 'path';
 import XlsxPopulate from 'xlsx-populate';
+import { UploadSimDto } from './dto';
 
 @Injectable()
 export class SimService {
@@ -34,6 +35,22 @@ export class SimService {
             data,
             skipDuplicates: true,
         });
+    }
+
+    async uploadNewSim(simDto: UploadSimDto) {
+        const { imsi, iccid, msisdn, type, lpa, account } = simDto;
+        const resp = await this.prisma.esim.create({
+            data: {
+                imsi: String(imsi),
+                iccid: String(iccid),
+                msisdn: String(msisdn),
+                type: String(type),
+                lpa: String(lpa),
+                account: String(account),
+            }
+        });
+        console.log(resp);
+        return { message: 'Sim uploaded successfully', success: true, statusCode: 201 };
     }
 
     async getEsims() {

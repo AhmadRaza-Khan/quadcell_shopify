@@ -1,4 +1,5 @@
   function renderData(tab, data) {
+    console.log(data)
     container.innerHTML = "";
 
     const capitalize = (val) => typeof val === "string" ? val.charAt(0).toUpperCase() + val.slice(1) : val;
@@ -8,7 +9,7 @@
     let headingText = "";
 
     // Orders
-    if (["Today", "Failed", "All"].includes(tab)) {
+    if (["Today", "All"].includes(tab)) {
       const orders = data ?? [];
       if (!orders.length) {
         container.innerHTML = `
@@ -88,15 +89,6 @@
     const tbody = document.createElement("tbody");
     rows.forEach(row => {
       const tr = document.createElement("tr");
-      if (["IMSI TYPE 45400", "IMSI TYPE 45407"].includes(tab)) {
-        tr.classList.add("cursor-pointer");
-        tr.addEventListener("click", () => {
-          const modalId = document.getElementById("prod_modal");
-          const prod = data.products.find((p) => p.sku === row[2]);
-          showProduct(prod, tab)
-          modalId.showModal()
-        });
-      }
 
       row.forEach(col => {
         const td = document.createElement("td");

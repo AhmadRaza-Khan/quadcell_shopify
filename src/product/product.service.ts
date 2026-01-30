@@ -260,7 +260,7 @@ async getImsi45407(res){
 async test(res){
        const products = await this.prisma.product.findMany({
         where: {
-           syncStatus: "synced"
+           syncStatus: "pending"
          }
        });
        return res.json({"success": true, "products": products.length})
