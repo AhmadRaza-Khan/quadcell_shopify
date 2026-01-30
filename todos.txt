@@ -1,0 +1,2 @@
+sudo nano /etc/postgresql/*/main/pg_hba.conf
+remove from bottom: host    all     all     0.0.0.0/0     md5

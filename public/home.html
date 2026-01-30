@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
 </head>
-<body class="h-[88vh] m-0 p-0 box-border">
+<body class="h-[88vh] m-0 p-0 box-border text-[#00ffff]">
 
     <div id="show-btn" tabindex="0" role="button" class="btn lg:hidden xl:hidden 2xl:hidden btn-ghost btn-circle">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /> </svg>
@@ -25,11 +25,11 @@
 
     <div class="flex h-full">
         <!-- Tab Navigation -->
-        <ul id="sidebarcomp" class="menu bg-base-200 w-56 hidden lg:block xl:block 2xl:block">
-        <li class="text-xl ml-2 text-accent">Dashboard</li>
+        <ul id="sidebarcomp" class="menu border-r w-56 hidden lg:block xl:block 2xl:block">
+        <li class="text-xl ml-2">Navigations</li>
         <li>
             <details open>
-            <summary class="text-accent">Orders</summary>
+            <summary class="">Orders</summary>
             <ul>
                 <li><a>Today</a></li>
                 <li><a>Failed</a></li>
@@ -39,28 +39,27 @@
         </li>
         <li>
             <details open>
-            <summary class="text-accent">Stock</summary>
+            <summary class="">Sims</summary>
             <ul>
-                <li><a>Out of Stock</a></li>
-                <li><a>Going Out of Stock</a></li>
-                <li><a>All</a></li>
+                <li><a>E-Sims</a></li>
+                <li><a>P-Sims</a></li>
             </ul>
             </details>
         </li>
         
         <li>
             <details open>
-            <summary class="text-accent">Products</summary>
+            <summary class="">Products</summary>
             <ul>
-                <li><a>Synced Products</a></li>
-                <li><a>Non Synced Products</a></li>
+                <li><a>IMSI TYPE 45400</a></li>
+                <li><a>IMSI TYPE 45407</a></li>
             </ul>
             </details>
         </li>
         </ul>
 
         <!-- Container -->
-        <div id="container" class="flex-1 h-full text-white overflow-y-auto overflow-x-auto"></div>
+        <div id="container" class="flex-1 h-full overflow-y-auto overflow-x-auto"></div>
     </div>
     <script src="./js/cdn.js"></script>
 </body>

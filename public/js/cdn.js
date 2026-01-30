@@ -10,5 +10,5 @@ document.write(`
     <script src="/js/reRenderData.js"></script>
     <script src="/schemas/orderSchema.js"></script>
     <script src="/schemas/productSchema.js"></script>
-    <script src="/schemas/stockSchema.js"></script>
+    <script src="/schemas/simSchema.js"></script>
 `);

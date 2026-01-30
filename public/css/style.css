@@ -3,5 +3,5 @@
 @source "./public/**/*.{html,js}";
 
 @plugin "daisyui" {
-  themes: synthwave --default;
+  themes: black --default;
 }

@@ -1,0 +1,18 @@
+db_name: quadcell_db
+dbuser: quaduser
+db_pwd: jlj4l4jl345j45j34lj5l4
+
+    "username": "m-mobile",
+    "password": "m!mob#ile>"
+
+
+
+root
+server_ip: 178.128.225.19
+58ROZVZLQLP461G
+
+
+
+config: 
+sudo ln -s /etc/nginx/sites-available/quadcell_shopify_app /etc/nginx/sites-enabled/
+

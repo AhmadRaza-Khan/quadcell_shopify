@@ -1,14 +1,13 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("loginForm");
-  const emailInput = document.getElementById("email");
+  const usernameInput = document.getElementById("username");
   const passwordInput = document.getElementById("password");
   const btn = document.getElementById("submitBtn");
 
-  const errorEmail = document.getElementById("errorEmail");
+  const errorUsername = document.getElementById("errorUsername");
   const errorPassword = document.getElementById("errorPassword");
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^.{4,}$/;
 
   form.addEventListener("submit", async (e) => {
@@ -16,11 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let valid = true;
 
-    if (!emailRegex.test(emailInput.value.trim())) {
-      errorEmail.classList.remove("hidden");
+    if (!usernameInput.value.trim()) {
+      errorUsername.classList.remove("hidden");
       valid = false;
     } else {
-      errorEmail.classList.add("hidden");
+      errorUsername.classList.add("hidden");
     }
 
     if (!passwordRegex.test(passwordInput.value.trim())) {
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: emailInput.value.trim(),
+          username: usernameInput.value.trim(),
           password: passwordInput.value.trim(),
         }),
       });

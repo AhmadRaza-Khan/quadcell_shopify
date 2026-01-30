@@ -12,11 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "Today": "/order/orders-today",
     "Failed": "/order/orders-failed",
     "All": "/order/orders-all",
-    "Out of Stock": "/inventory/stock-out",
-    "Going Out of Stock": "/inventory/stock-going",
-    "All Stock": "/inventory/stock-all",
-    "Synced Products": "/product/get-synced",
-    "Non Synced Products": "/product/get-unsynced",
+    "E-Sims": "/sim/e-sims",
+    "P-Sims": "/sim/p-sims",
+    "IMSI TYPE 45400": "/product/imsi-45400",
+    "IMSI TYPE 45407": "/product/imsi-45407",
   };
 
   const links = document.querySelectorAll("ul.menu li ul li a")
@@ -24,16 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", async (e) => {
       e.preventDefault();
       sidebar.classList.add("hidden");
-      setLoading(true, container)
-
-      links.forEach(l => l.classList.remove("text-accent"));
-      e.target.classList.add("text-accent");
+      setLoading(true, container);
+      
+      links.forEach(l => l.classList.remove("bg-[#00ffff]", "text-black"));
+      e.target.classList.add("bg-[#00ffff]", "text-black");
 
       let text = e.target.textContent.trim();
       if (text === "All") {
         const details = e.target.closest("details");
         const summaryText = details?.querySelector("summary")?.textContent || "";
-        if (summaryText.includes("Stock")) text = "All Stock";
+        if (summaryText.includes("Sims")) text = "E-Sims";
       }
 
       const url = dataMap[text];

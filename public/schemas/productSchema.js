@@ -1,8 +1,12 @@
 const Products = {
     "headers": [
-        "title",
-        "sku",
+        "msisdn",
+        "name",
         "price",
-        "stock",
+        "description",
+        "data",
+        "lifeCycle",
+        "validityMode",
+        "syncStatus"
     ]
 }

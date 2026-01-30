@@ -1,0 +1,52 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username     String @unique
+  password String
+}
+
+model Product {
+  id                          Int      @id @default(autoincrement())
+  sku                         String      @unique
+  imsi                        Int
+  msisdn                      String
+  name                        String?
+  coverage                    String?
+  description                 String?
+  data                        String?
+  lifeCycle                   Int?
+  validityMode                String?
+  speedControlMode            String?
+  initialSpeed                String?
+  price                       Float?
+  speedControllTier1          String?
+  speedControllTier2          String?
+  planCode                   Int?
+  packCode                    Int?
+  fupCode                     Int?
+  productId                   String?
+  variantId                   String?
+  inventoryItemId             String?
+  syncStatus                  String   @default("pending")
+}
+
+
+model Esim {
+  id                          Int      @id @default(autoincrement())
+  imsi                        String
+  iccid                       String
+  msisdn                      String
+  lpa                         String
+  account                     String
+  type                        String
+  isActive                    Boolean @default(false)
+}

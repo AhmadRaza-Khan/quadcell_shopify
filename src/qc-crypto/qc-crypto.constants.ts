@@ -1,0 +1,22 @@
+export const QUADCELL_KEYS: Record<number, Buffer> = {
+  0x01: Buffer.from(
+    'F24D971DA7174DA9AA0252F861447177725A02B6274A44E7',
+    'hex',
+  ),
+  0x02: Buffer.from(
+    '498B731F89B14501AAAE8BA77DBD57E85EA6CF6CEE914868',
+    'hex',
+  ),
+  0x03: Buffer.from(
+    '0C9B507A39F14363BCDE00AEE8FB95AE149A92F359AE42DE',
+    'hex',
+  ),
+  0x04: Buffer.from(
+    'B0F49A91EDFE4A3F9F0AB860ED1EB006A76DA99594FF445F',
+    'hex',
+  ),
+  0x05: Buffer.from(
+    '64167CB3F30E44D1ABF6F62C800D98C9F2E882A0004746F0',
+    'hex',
+  ),
+};

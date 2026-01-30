@@ -13,7 +13,7 @@
       if (!orders.length) {
         container.innerHTML = `
           <div class="h-full w-full">
-            <h2 class="text-xl text-accent text-center font-bold mb-4">${tab}</h2>
+            <h2 class="text-xl text-[#00ffff] text-center font-bold mb-4">${tab}</h2>
             <p class="text-center mx-auto mt-32">No ${tab}</p>
           <div>
         `;
@@ -27,33 +27,33 @@
       ]);
     }
 
-    // Stocks
-    if (["Out of Stock", "Going Out of Stock", "All Stock"].includes(tab)) {
-      const stocks = data?? [];
-      if (!stocks.length) {
+    // Sims
+    if (["E-Sims", "P-Sims"].includes(tab)) {
+      const sims = data?? [];
+      if (!sims.length) {
         container.innerHTML = `
           <div class="h-full w-full">
-            <h2 class="text-xl text-accent text-center font-bold mb-4">${tab}</h2>
+            <h2 class="text-xl text-[#00ffff] text-center font-bold mb-4">${tab}</h2>
             <p class="text-center mx-auto mt-32">No item ${tab}</p>
           <div>
         `;
         return;
       }
       headingText = `${tab}`;
-      headers.push("#", ...Stock.headers.map(capitalize));
-      rows = stocks.map((stock, idx) => [
+      headers.push("#", ...Sim.headers.map(capitalize));
+      rows = sims.map((sim, idx) => [
         idx + 1,
-        ...Stock.headers.map(h => stock[h] ?? "")
+        ...Sim.headers.map(h => sim[h] ?? "")
       ]);
     }
 
     // Products
-    if (["Synced Products", "Non Synced Products"].includes(tab)) {
+    if (["IMSI TYPE 45400", "IMSI TYPE 45407"].includes(tab)) {
       const products = data.products ?? [];
       if (!products.length) {
         container.innerHTML = `
           <div class="h-full w-full">
-            <h2 class="text-xl text-accent text-center font-bold mb-4">${tab}</h2>
+            <h2 class="text-xl text-[#00ffff] text-center font-bold mb-4">${tab}</h2>
             <p class="text-center mx-auto mt-32">No ${tab}</p>
           <div>
         `;
@@ -88,7 +88,7 @@
     const tbody = document.createElement("tbody");
     rows.forEach(row => {
       const tr = document.createElement("tr");
-      if (["Synced Products", "Non Synced Products"].includes(tab)) {
+      if (["IMSI TYPE 45400", "IMSI TYPE 45407"].includes(tab)) {
         tr.classList.add("cursor-pointer");
         tr.addEventListener("click", () => {
           const modalId = document.getElementById("prod_modal");
