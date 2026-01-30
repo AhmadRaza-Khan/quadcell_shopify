@@ -171,7 +171,7 @@ export class ProductService {
       product: {
         title: `Coverage: ${coverage}`,
         body_html,
-        vendor: 'QuadCell',
+        vendor: 'M-MobileQC',
         product_type: 'Data Package',
         status: 'active',
 
