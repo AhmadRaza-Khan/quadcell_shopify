@@ -11,6 +11,9 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+todos.txt
+creds.txt
+data.json
 
 # OS
 .DS_Store

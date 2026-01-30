@@ -11,6 +11,11 @@ root
 server_ip: 178.128.225.19
 58ROZVZLQLP461G
 
+scp ~/gh-actions-key root@178.128.225.19:/root/
+scp ~/gh-actions-key.pub root@178.128.225.19:/root/
+ssh root@YOUR_SERVER_IP
+chmod 600 /root/gh-actions-key
+cat /root/gh-actions-key.pub >> /root/.ssh/authorized_keys
 
 
 config: 
