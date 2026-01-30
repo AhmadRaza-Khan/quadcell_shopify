@@ -94,7 +94,11 @@ export class ProductService {
         ? null
         : String(v);
 
-    const SIM_TYPES = ['e-sim', 'p-sim'];
+    const SIM_TYPES = [
+      { label: 'E-SIM', code: 'ESIM' },
+      { label: 'Physical SIM', code: 'PSIM' },
+    ];
+
 
     const products = await this.prisma.product.findMany({
       where: { syncStatus: 'pending' },
@@ -136,10 +140,10 @@ export class ProductService {
           price: String(p.price ?? 0.00),
 
           // SKU must be unique
-          sku: `${p.sku}-${simType === 'e-sim' ? 'e-sim' : 'p-sim'}`,
+          sku: `${p.sku}-${simType.code === 'ESIM' ? 'ESIM' : 'PSIM'}`,
 
-          option1: simType, // SIM Type
-          option2: p.name,  // Plan
+          option1: simType.label,
+          option2: p.name,
 
           inventory_management: 'shopify',
           inventory_quantity: 100,
@@ -151,17 +155,17 @@ export class ProductService {
     const body_html = groupProducts
       .map(
         (p) => `
-<strong>Description:</strong><p>${p.description}</p>
-${p.data ? `<strong>Data:</strong><p>${p.data}</p>` : ''}
-${p.lifeCycle ? `<strong>Validity Period:</strong><p>${p.lifeCycle}</p>` : ''}
-${p.validityMode ? `<strong>Validity Mode:</strong><p>${p.validityMode}</p>` : ''}
-${p.speedControlMode ? `<strong>Speed Control Mode:</strong><p>${p.speedControlMode}</p>` : ''}
-${p.initialSpeed ? `<strong>Initial Speed:</strong><p>${p.initialSpeed}</p>` : ''}
-${clean(p.speedControllTier1) ? `<strong>Speed Tier 1:</strong><p>${p.speedControllTier1}</p>` : ''}
-${clean(p.speedControllTier2) ? `<strong>Speed Tier 2:</strong><p>${p.speedControllTier2}</p>` : ''}
-        `.trim()
-      )
-      .join('<hr/>');
+          <strong>Description:</strong><p>${p.description}</p>
+          ${p.data ? `<strong>Data:</strong><p>${p.data}</p>` : ''}
+          ${p.lifeCycle ? `<strong>Validity Period:</strong><p>${p.lifeCycle}</p>` : ''}
+          ${p.validityMode ? `<strong>Validity Mode:</strong><p>${p.validityMode}</p>` : ''}
+          ${p.speedControlMode ? `<strong>Speed Control Mode:</strong><p>${p.speedControlMode}</p>` : ''}
+          ${p.initialSpeed ? `<strong>Initial Speed:</strong><p>${p.initialSpeed}</p>` : ''}
+          ${clean(p.speedControllTier1) ? `<strong>Speed Tier 1:</strong><p>${p.speedControllTier1}</p>` : ''}
+          ${clean(p.speedControllTier2) ? `<strong>Speed Tier 2:</strong><p>${p.speedControllTier2}</p>` : ''}
+                  `.trim()
+                )
+                .join('<hr/>');
 
     const payload = {
       product: {
@@ -259,6 +263,6 @@ async test(res){
            syncStatus: "synced"
          }
        });
-       return res.json({"success": true, "products": products})
+       return res.json({"success": true, "products": products.length})
 }
 }
