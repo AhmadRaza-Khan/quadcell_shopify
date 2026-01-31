@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -23,11 +23,44 @@ export class OrderService {
     console.log("Order Webhook Data:", data);
       await this.prisma.webhook.create({
         data: {
-          payload: JSON.stringify(data),
+          payload: data,
         }
       })
 
       return {message: "Webhook received", status: 200, success: true};
+  }
+
+    async createOrderPaidWebhook() {
+    const webhookUrl = "https://api.m-mobile.net/order/order-webhook";
+    const url = `${this.shop}/admin/api/2023-10/webhooks.json`;
+
+    const payload = {
+      webhook: {
+        topic: 'orders/paid',
+        address: webhookUrl,
+        format: 'json',
+      },
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-Shopify-Access-Token': this.token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new HttpException(
+        data || 'Failed to create Shopify webhook',
+        response.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return data.webhook;
   }
   
   async getAllOrders() {
