@@ -21,7 +21,7 @@ export class SubscriberService {
 
     await this.prisma.webhook.create({
       data: {
-        payload: JSON.stringify(dto),
+        payload: dto,
       },
     });
 
