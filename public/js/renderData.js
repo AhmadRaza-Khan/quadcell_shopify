@@ -1,5 +1,4 @@
   function renderData(tab, data) {
-    console.log(data)
     container.innerHTML = "";
 
     const capitalize = (val) => typeof val === "string" ? val.charAt(0).toUpperCase() + val.slice(1) : val;
