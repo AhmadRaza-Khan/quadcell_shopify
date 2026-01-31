@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { QuadcellCryptoService } from 'src/qc-crypto/qc-crypto.service';
 
 @Injectable()
@@ -7,12 +8,27 @@ export class SubscriberService {
     constructor(
     private readonly quadcellCrypto: QuadcellCryptoService,
     private config: ConfigService,
+    private prisma: PrismaService
   ) {}
 
 
-  async addSubscriber(): Promise<string> {
+  async getdata(){
+    return await this.prisma.webhook.findMany();
+  }
 
-    const payload =  {
+
+  async registerWebhook(dto: any) {
+
+    await this.prisma.webhook.create({
+      data: {
+        payload: JSON.stringify(dto),
+      },
+    });
+
+    return {message: "Webhook recieved", status: 200, success: true};
+
+    const addSubscriber = async(): Promise<any> => {
+      const payload =  {
         "authKey": this.config.get<string>('API_AUTH_KEY'),
         "imsi":"454070012345678",
         "iccid":"89852454070123456789",
@@ -23,24 +39,28 @@ export class SubscriberService {
         "initBalance":"100"
     };
 
-    const encrypted = this.quadcellCrypto.encrypt(payload, 0x01);
+      const encrypted = this.quadcellCrypto.encrypt(payload, 0x01);
 
-    const response = await fetch(`${this.config.get<string>('BASE_API_URL')}/addsub`, {
-        method: 'POST',
-        headers: {
-      'Content-Type': 'text/plain',
-        },
-        body: encrypted,
-    })
+      const response = await fetch(`${this.config.get<string>('BASE_API_URL')}/addsub`, {
+          method: 'POST',
+          headers: {
+        'Content-Type': 'text/plain',
+          },
+          body: encrypted,
+      })
 
-    const encryptedResponseHex = await response.text();
+      const encryptedResponseHex = await response.text();
 
-    const decryptedResponse =
-    this.quadcellCrypto.decrypt(encryptedResponseHex);
+      const decryptedResponse =
+      this.quadcellCrypto.decrypt(encryptedResponseHex);
 
-    console.log(decryptedResponse);
+      console.log(decryptedResponse);
 
-        return decryptedResponse;
+          return decryptedResponse;
+      };
+
+      return {message: "Webhook recieved", status: 200, success: true};
+    
     }
     
 

@@ -50,3 +50,9 @@ model Esim {
   type                        String
   isActive                    Boolean @default(false)
 }
+
+
+model Webhook {
+  id          String   @id @default(uuid())
+  payload     Json
+}

@@ -1,8 +1,7 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { JwtGuard } from '../auth/guard';
 
-@UseGuards(JwtGuard)
 @Controller('order')
 export class OrderController {
   constructor(private service: OrderService){}
@@ -14,5 +13,10 @@ export class OrderController {
   @Get("orders-today")
   getTodayOrders(){
     return this.service.getTodayOrders();
+  }
+
+  @Post("order-webhook")
+  orderWebhook(@Body()data: any) {
+    return this.service.orderWebhook(data);
   }
 }

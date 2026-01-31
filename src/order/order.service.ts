@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class OrderService {
@@ -13,9 +14,20 @@ export class OrderService {
     };
   }
 
-  constructor(private readonly config: ConfigService){
+  constructor(private readonly config: ConfigService, private prisma: PrismaService){
           this.shop = this.config.get<string>("SHOPIFY_URL")!;
           this.token = this.config.get<string>("SHOPIFY_ACCESS_TOKEN")!;
+  }
+
+  async orderWebhook(data: any) {
+    console.log("Order Webhook Data:", data);
+      await this.prisma.webhook.create({
+        data: {
+          payload: JSON.stringify(data),
+        }
+      })
+
+      return {message: "Webhook received", status: 200, success: true};
   }
   
   async getAllOrders() {
