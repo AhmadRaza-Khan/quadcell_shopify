@@ -25,7 +25,7 @@ export class SubscriberService {
 
   async decryptSubscriberData(): Promise<any> {
     const getFirst = await this.prisma.test.findFirst() || { payload: '' };
-    const decryptedResponse = this.quadcellCrypto.decrypt(getFirst.payload);
+    const decryptedResponse = this.quadcellCrypto.decrypt(getFirst.payload || '',);
     return decryptedResponse;
   }
 }

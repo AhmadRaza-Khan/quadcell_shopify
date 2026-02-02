@@ -72,5 +72,6 @@ model Order {
 
 model Test {
   id          String   @id @default(uuid())
-  payload     String
+  payload     String?
+  jsonPayload Json?
 }

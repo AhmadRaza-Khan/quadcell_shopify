@@ -119,6 +119,9 @@ export class OrderConsumer implements OnModuleInit {
     } catch (error) {
       if (error instanceof NonRetryableError) {
         console.error('Non-retryable:', error.message);
+        await this.prisma.test.create({
+          data: { jsonPayload: error.message },
+        });
         return;
       }
 
