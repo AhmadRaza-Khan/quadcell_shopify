@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { QueueService } from 'src/queue/queue.service';
 
 @Injectable()
 export class OrderService {
@@ -14,54 +15,84 @@ export class OrderService {
     };
   }
 
-  constructor(private readonly config: ConfigService, private prisma: PrismaService){
+  constructor(
+    private readonly config: ConfigService,
+    private prisma: PrismaService,
+    private readonly queueService: QueueService
+  ){
           this.shop = this.config.get<string>("SHOPIFY_URL")!;
           this.token = this.config.get<string>("SHOPIFY_ACCESS_TOKEN")!;
   }
 
-  async orderWebhook(data: any) {
-    console.log("Order Webhook Data:", data);
-      await this.prisma.webhook.create({
-        data: {
-          payload: data,
-        }
-      })
-
+  async orderWebhook(payload: any) {
+      await this.queueService.addOrderJob(payload);
       return {message: "Webhook received", status: 200, success: true};
   }
 
-    async createOrderPaidWebhook() {
-    const webhookUrl = "https://api.m-mobile.net/order/order-webhook";
-    const url = `${this.shop}/admin/api/2023-10/webhooks.json`;
+    async createCustomerRegisterWebhook() {
+  const webhookUrl = 'https://api.m-mobile.net/subscriber/addSub';
+  const url = `${this.shop}/admin/api/2023-10/webhooks.json`;
 
-    const payload = {
-      webhook: {
-        topic: 'orders/paid',
-        address: webhookUrl,
-        format: 'json',
-      },
-    };
+  const payload = {
+    webhook: {
+      topic: 'customers/create',
+      address: webhookUrl,
+      format: 'json',
+    },
+  };
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'X-Shopify-Access-Token': this.token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'X-Shopify-Access-Token': this.token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    if (!response.ok) {
-      throw new HttpException(
-        data || 'Failed to create Shopify webhook',
-        response.status || HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    return data.webhook;
+  if (!response.ok) {
+    throw new HttpException(
+      data || 'Failed to create Shopify customer webhook',
+      response.status || HttpStatus.BAD_REQUEST,
+    );
   }
+
+  return data.webhook;
+}
+
+async listWebhooks() {
+  const url = `${this.shop}/admin/api/2023-10/webhooks.json`;
+
+  const response = await fetch(url, {
+    headers: {
+      'X-Shopify-Access-Token': this.token,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const text = await response.text();
+  let data: any = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text;
+  }
+
+  if (!response.ok) {
+    console.error('Error fetching Shopify webhooks:', text);
+    throw new HttpException(
+      data || text || 'Failed to fetch Shopify webhooks',
+      response.status,
+    );
+  }
+
+  // returns array of webhooks
+  return data.webhooks;
+}
+
+
   
   async getAllOrders() {
     const url = `${this.shop}/admin/api/2023-10/orders.json?status=any`;

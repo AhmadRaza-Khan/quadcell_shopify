@@ -6,12 +6,12 @@ export class SubscriberController {
     constructor(private subscriberService: SubscriberService) {}
 
     @Post('addSub')
-    async checkSubscriber(@Body() dto: any){
-        return this.subscriberService.registerWebhook(dto);
+    async checkSubscriber(@Body() payload: any){
+        return this.subscriberService.registerAccountWebhook(payload);
     }
 
     @Get('getWebhooks')
     async getWebhooks(){
-        return this.subscriberService.getdata();
+        return this.subscriberService.decryptSubscriberData();
     }
 }

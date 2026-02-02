@@ -19,8 +19,13 @@ export class OrderController {
   orderWebhook(@Body()data: any) {
     return this.service.orderWebhook(data);
   }
-  @Get("create-order-webhook")
-  createOrderPaidWebhook() {
-    return this.service.createOrderPaidWebhook();
+  @Get("create-customer-register-webhook")
+  createCustomerRegisterWebhook() {
+    return this.service.createCustomerRegisterWebhook();
+  }
+
+  @Get("list")
+  listWebhooks() {
+    return this.service.listWebhooks();
   }
 }

@@ -52,7 +52,25 @@ model Esim {
 }
 
 
-model Webhook {
+model Subscriber {
+  id                          Int      @id @default(autoincrement())
+  customerId                  String      @unique
+  imsi                        String?
+  iccid                       String?
+  msisdn                      String?
+  planCode                    String?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+}
+
+model Order {
   id          String   @id @default(uuid())
-  payload     Json
+  orderId     String @unique
+  customerId  String
+  productSku  String
+}
+
+model Test {
+  id          String   @id @default(uuid())
+  payload     String
 }
