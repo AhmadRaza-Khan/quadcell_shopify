@@ -40,14 +40,6 @@ export class OrderConsumer implements OnModuleInit {
   }
 
   private async handleOrder(orderPayload: any) {
-    const exists = await this.prisma.order.findUnique({
-      where: { orderId: String(orderPayload.id) },
-    });
-
-    if (exists?.status) {
-      console.log('Order already processed:', orderPayload.id);
-      return;
-    }
 
     try {
       const sku = orderPayload.line_items[0].sku;
@@ -117,14 +109,6 @@ export class OrderConsumer implements OnModuleInit {
             planCode: String(plan.planCode),
         }
       })
-      await this.prisma.order.update({
-        where: {
-          orderId: String(orderPayload.id),
-        },
-        data: {
-          status: true
-        },
-      });
 
     return {success: true};
 
