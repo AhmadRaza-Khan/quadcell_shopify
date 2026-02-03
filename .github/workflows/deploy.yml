@@ -25,24 +25,12 @@ jobs:
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_KEY }}
           script: |
-            set -e
             cd /home/ubuntu/shopify-quadcell-backend
-
-            echo "=== BEFORE ==="
-            git rev-parse HEAD
-
-            git fetch origin
-            git checkout master
-            git reset --hard origin/master
-            git clean -fd
-
-            echo "=== AFTER ==="
-            git rev-parse HEAD
-
+            git reset --hard
+            git pull origin master
             npm ci
             npm run build:css
             npx prisma generate
             npx prisma migrate deploy
             npx nest build
-
             pm2 restart shopify-quadcell

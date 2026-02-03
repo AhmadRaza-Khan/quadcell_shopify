@@ -29,39 +29,6 @@ export class OrderService {
       return {message: "Webhook received", status: 200, success: true};
   }
 
-    async createCustomerRegisterWebhook() {
-  const webhookUrl = 'https://api.m-mobile.net/subscriber/addSub';
-  const url = `${this.shop}/admin/api/2023-10/webhooks.json`;
-
-  const payload = {
-    webhook: {
-      topic: 'customers/create',
-      address: webhookUrl,
-      format: 'json',
-    },
-  };
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'X-Shopify-Access-Token': this.token,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new HttpException(
-      data || 'Failed to create Shopify customer webhook',
-      response.status || HttpStatus.BAD_REQUEST,
-    );
-  }
-
-  return data.webhook;
-}
-
 async listWebhooks() {
   const url = `${this.shop}/admin/api/2023-10/webhooks.json`;
 
