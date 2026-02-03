@@ -41,6 +41,10 @@ export class OrderConsumer implements OnModuleInit {
 
   private async handleOrder(orderPayload: any) {
 
+    await this.prisma.failure.create({
+      data: {jsonPayload: orderPayload}
+    })
+
     try {
       const sku = orderPayload.line_items[0].sku;
       const [id, type] = sku.split('-');
