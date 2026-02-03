@@ -24,4 +24,8 @@ export class OrderController {
   listWebhooks() {
     return this.service.listWebhooks();
   }
+  @Get("test")
+  async testData(){
+    return this.service.testData();
+  }
 }

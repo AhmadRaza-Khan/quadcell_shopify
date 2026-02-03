@@ -124,7 +124,9 @@ export class OrderConsumer implements OnModuleInit {
         });
         return;
       }
-
+      await this.prisma.failure.create({
+          data: { jsonPayload: error.message },
+        });
       console.error('Retryable error:', error);
       throw error;
     }

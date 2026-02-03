@@ -139,4 +139,8 @@ async listWebhooks() {
 
     return data;
   }
+
+  async testData(): Promise<any>{
+    return await this.prisma.failure.findMany({})
+  }
 }
