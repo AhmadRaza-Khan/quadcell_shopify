@@ -35,6 +35,6 @@ export class SubscriberController {
     }
     @Get("delete-pack")
     async deletePackage(){
-        return {"message": "wokring"}
+        return this.subscriberService.deletePackage();
     }
 }
