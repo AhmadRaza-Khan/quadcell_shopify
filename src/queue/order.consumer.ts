@@ -30,7 +30,7 @@ export class OrderConsumer implements OnModuleInit {
       },
       {
         connection: {
-          host: process.env.REDIS_HOST || 'localhost',
+          host: '127.0.0.1',
           port: +(process.env.REDIS_PORT || 6379),
         },
         concurrency: 3,
