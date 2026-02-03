@@ -109,7 +109,6 @@ export class ProductService {
       return { message: 'No pending products to sync' };
     }
 
-    // Group by coverage
     const coverageGroups: Record<string, typeof products> = {};
     for (const product of products) {
       const key = product.coverage || 'Default Coverage';
@@ -117,7 +116,6 @@ export class ProductService {
       coverageGroups[key].push(product);
     }
 
-    // Process ONE coverage group per run (your existing behavior)
     const [coverage, groupProducts] = Object.entries(coverageGroups)[0];
 
     if (!groupProducts?.length) {
@@ -225,7 +223,7 @@ export class ProductService {
     }
 
     console.log(
-      `✅ Synced coverage "${coverage}" with ${shopifyProduct.variants.length} variants`
+      `Synced coverage "${coverage}" with ${shopifyProduct.variants.length} variants`
     );
 
     return {

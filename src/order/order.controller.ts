@@ -19,7 +19,7 @@ export class OrderController {
   orderWebhook(@Body()data: any) {
     return this.service.orderWebhook(data);
   }
-  @Get("create-customer-register-webhook")
+  @Get("create-webhooks")
   createCustomerRegisterWebhook() {
     return this.service.createCustomerRegisterWebhook();
   }
