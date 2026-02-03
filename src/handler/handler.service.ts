@@ -16,7 +16,7 @@ export class HandlerService {
 
         const encrypted = this.quadcellCrypto.encrypt(payload);
 
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+        // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
         const response = await fetch(`${this.apiUrl}/${endpoint}`, {
         method: 'POST',

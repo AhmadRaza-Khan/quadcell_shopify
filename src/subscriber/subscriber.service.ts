@@ -15,14 +15,11 @@ export class SubscriberService {
 
 
   async registerAccountWebhook(payload: any) {
-    await this.prisma.failure.create({
-      data: {jsonPayload: payload}
+    await this.prisma.subscriber.create({
+      data: {
+        customerId: String(payload.id),
+      },
     });
-    // await this.prisma.subscriber.create({
-    //   data: {
-    //     customerId: String(payload.id),
-    //   },
-    // });
     return {message: "Webhook recieved", status: 200, success: true};
   }
   
@@ -53,5 +50,10 @@ export class SubscriberService {
     const startDate = subscriber?.updatedAt.toISOString().slice(0, 10).replace(/-/g, '');
     const payload = {"authKey": "M!m9icN#", "imsi": "454070059289775", "beginDate": startDate, "endDate": today};
     return this.handler.quadcellApiHandler(payload, "qryusage")
+  }
+  async deleltePackage(): Promise<any> {
+    const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "822148" };
+    const response = await this.handler.quadcellApiHandler(payload, "delpack");
+    return response;
   }
 }

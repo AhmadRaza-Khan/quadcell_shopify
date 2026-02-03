@@ -117,6 +117,14 @@ export class OrderConsumer implements OnModuleInit {
             planCode: String(plan.planCode),
         }
       })
+      await this.prisma.order.update({
+        where: {
+          orderId: String(orderPayload.id),
+        },
+        data: {
+          status: true
+        },
+      });
 
     return {success: true};
 
