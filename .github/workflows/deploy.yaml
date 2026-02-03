@@ -1,0 +1,36 @@
+name: Deploy NestJS to DigitalOcean
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USER }}
+          key: ${{ secrets.DO_KEY }}
+          script: |
+            cd /home/ubuntu/shopify-quadcell-backend
+            git reset --hard
+            git pull origin master
+            npm ci
+            npm run build:css
+            npx prisma generate
+            npx prisma migrate deploy
+            npx nest build
+            pm2 restart shopify-quadcell
