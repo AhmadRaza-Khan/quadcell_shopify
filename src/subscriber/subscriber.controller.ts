@@ -35,6 +35,6 @@ export class SubscriberController {
     }
     @Get("deleltePackage")
     async deletePackage(){
-        return this.deletePackage();
+        return this.subscriberService.deleltePackage();
     }
 }
