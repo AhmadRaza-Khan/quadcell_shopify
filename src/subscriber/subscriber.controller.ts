@@ -33,8 +33,8 @@ export class SubscriberController {
     async queryUsage(){
         return this.subscriberService.queryUsage();
     }
-    @Get("deleltePackage")
+    @Get("delete-pack")
     async deletePackage(){
-        return this.subscriberService.deleltePackage();
+        return {"message": "wokring"}
     }
 }

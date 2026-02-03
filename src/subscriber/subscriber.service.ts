@@ -51,7 +51,7 @@ export class SubscriberService {
     const payload = {"authKey": "M!m9icN#", "imsi": "454070059289775", "beginDate": startDate, "endDate": today};
     return this.handler.quadcellApiHandler(payload, "qryusage")
   }
-  async deleltePackage(): Promise<any> {
+  async deletePackage(): Promise<any> {
     const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "822148" };
     const response = await this.handler.quadcellApiHandler(payload, "delpack");
     return response;
