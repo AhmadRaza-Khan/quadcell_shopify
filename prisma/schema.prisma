@@ -30,7 +30,7 @@ model Product {
   price                       Float?
   speedControllTier1          String?
   speedControllTier2          String?
-  planCode                   Int?
+  planCode                    Int?
   packCode                    Int?
   fupCode                     Int?
   productId                   String?
@@ -68,9 +68,10 @@ model Order {
   orderId     String @unique
   customerId  String
   productSku  String
+  status      Boolean @default(false)
 }
 
-model Test {
+model Failure {
   id          String   @id @default(uuid())
   payload     String?
   jsonPayload Json?

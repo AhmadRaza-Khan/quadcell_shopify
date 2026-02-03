@@ -141,18 +141,3 @@ document.getElementById("add-sim").addEventListener("click", () => {
   document.getElementById("prod_modal").showModal();
   OpenSimCard()
 });
-
-function openProductModal(product) {
-  const modal = document.getElementById("prod-modal");
-  const titleEl = document.getElementById("modal-title");
-  const contentEl = document.getElementById("modal-content");
-
-  titleEl.textContent = product.title;
-  contentEl.innerHTML = `
-    <strong>SKU:</strong> ${product.sku}<br>
-    <strong>Price:</strong> $${product.price}<br>
-    <strong>Stock:</strong> ${product.stock}
-  `;
-
-  modal.showModal();
-}

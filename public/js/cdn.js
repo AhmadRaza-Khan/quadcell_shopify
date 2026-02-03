@@ -7,6 +7,7 @@ document.write(`
     <script src="/js/renderData.js"></script>
     <script src="/js/loading.js"></script>
     <script src="/js/uploadNewSim.js"></script>
+    <script src="/js/addSims.js"></script>
     <script src="/js/reRenderData.js"></script>
     <script src="/schemas/orderSchema.js"></script>
     <script src="/schemas/productSchema.js"></script>

@@ -10,8 +10,27 @@ export class SubscriberController {
         return this.subscriberService.registerAccountWebhook(payload);
     }
 
-    @Get('getWebhooks')
-    async getWebhooks(){
-        return this.subscriberService.decryptSubscriberData();
+    @Get('all-subscribers')
+    async getAllSubscribersFromDB(){
+        return this.subscriberService.getAllSubscribersFromDB();
+    }
+
+    @Get('getSubscriber')
+    async getSubscriber(){
+        return this.subscriberService.getSubscriber();
+    }
+
+    @Get('delSubscriber')
+    async deleteSubscriber(){
+        return this.subscriberService.deleteSubscriber();
+    }
+
+    @Get("queryPackageList")
+    async queryPackageList(){
+        return this.subscriberService.queryPackageList();
+    }
+    @Get("query-usage")
+    async queryUsage(){
+        return this.subscriberService.queryUsage();
     }
 }

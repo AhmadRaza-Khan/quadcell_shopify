@@ -4,6 +4,7 @@ import { ORDER_QUEUE } from './queue.constants';
 import { QueueService } from './queue.service';
 import { OrderConsumer } from './order.consumer';
 import { QuadcellCryptoModule } from 'src/qc-crypto/qc-crypto.module';
+import { HandlerModule } from 'src/handler/handler.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { QuadcellCryptoModule } from 'src/qc-crypto/qc-crypto.module';
       name: ORDER_QUEUE,
     }),
     QuadcellCryptoModule,
+    HandlerModule
   ],
   providers: [QueueService, OrderConsumer],
   exports: [QueueService],

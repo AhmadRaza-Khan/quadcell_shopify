@@ -3,6 +3,7 @@ import { Worker, Job } from 'bullmq';
 import { ORDER_QUEUE } from './queue.constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QuadcellCryptoService } from 'src/qc-crypto/qc-crypto.service';
+import { HandlerService } from 'src/handler/handler.service';
 
 class NonRetryableError extends Error {
   constructor(message: string) {
@@ -16,6 +17,7 @@ export class OrderConsumer implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly quadcellCrypto: QuadcellCryptoService,
+    private readonly handler: HandlerService
   ) {}
 
   onModuleInit() {
@@ -42,7 +44,7 @@ export class OrderConsumer implements OnModuleInit {
       where: { orderId: String(orderPayload.id) },
     });
 
-    if (exists) {
+    if (exists?.status) {
       console.log('Order already processed:', orderPayload.id);
       return;
     }
@@ -62,7 +64,7 @@ export class OrderConsumer implements OnModuleInit {
 
       const sim = await this.prisma.esim.findFirst({
         where: {
-          isActive: false,
+          isActive: true,
           type: simType,
           imsi: { startsWith: String(plan.imsi) },
         },
@@ -80,46 +82,48 @@ export class OrderConsumer implements OnModuleInit {
           productSku: sku,
         },
       });
-
-      const encrypted = this.quadcellCrypto.encrypt(
-        {
+ 
+        const payload ={
           authKey: process.env.API_AUTH_KEY,
           imsi: sim.imsi,
           iccid: sim.iccid,
           msisdn: sim.msisdn,
           planCode: plan.planCode,
           validity: plan.lifeCycle,
-        },
-        0x01,
-      );
+        }
 
-      const response = await fetch(`${process.env.API_URL}/addsub`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: encrypted,
-      });
-
-      if (!response.ok) {
-        throw new Error(`API error ${response.status}`);
+      const response = await this.handler.quadcellApiHandler(payload, "addsub");
+      const payld = {
+        authKey: process.env.API_AUTH_KEY,
+        imsi: sim.imsi,
+        packCode: String(plan.packCode)
       }
 
-      const encryptedResponseHex = await response.json();
+      await this.handler.quadcellApiHandler(payld, "v2/addpack");
 
       await this.prisma.esim.update({
         where: { id: sim.id },
         data: { isActive: true },
       });
 
-      await this.prisma.test.create({
-        data: { payload: encryptedResponseHex },
-      });
+      await this.prisma.subscriber.update({
+        where: {
+            customerId: orderPayload.customer.id
+        },
+        data: {
+            imsi: sim.imsi,
+            iccid: sim.iccid,
+            msisdn: sim.msisdn,
+            planCode: String(plan.planCode),
+        }
+      })
 
     return {success: true};
 
     } catch (error) {
       if (error instanceof NonRetryableError) {
         console.error('Non-retryable:', error.message);
-        await this.prisma.test.create({
+        await this.prisma.failure.create({
           data: { jsonPayload: error.message },
         });
         return;

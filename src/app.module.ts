@@ -15,6 +15,7 @@ import { QuadcellCryptoModule } from './qc-crypto/qc-crypto.module';
 import { SimModule } from './sim/sim.module';
 import { OrderModule } from './order/order.module';
 import { QueueModule } from './queue/queue.module';
+import { HandlerModule } from './handler/handler.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { QueueModule } from './queue/queue.module';
     QuadcellCryptoModule,
     SimModule,
     OrderModule,
-    QueueModule
+    QueueModule,
+    HandlerModule
   ],
   providers: [ProductService],
   controllers: [ProductController],
