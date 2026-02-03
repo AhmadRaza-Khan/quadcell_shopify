@@ -14,7 +14,7 @@ lerna-debug.log*
 todos.txt
 creds.txt
 data.json
-
+curl.txt
 # OS
 .DS_Store
 
