@@ -47,17 +47,18 @@ export class SubscriberService {
 
     const packList = await this.handler.quadcellApiHandler(payload, "qrypacklist");
     
-    const subscriber = await this.prisma.subscriber.findFirst({});
     const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const startDate = subscriber?.updatedAt.toISOString().slice(0, 10).replace(/-/g, '');
+    const startDate = packList.packList.effTime.slice(0, 6);
     const payload1 = {"authKey": this.apiKey, "imsi": imsi, "beginDate": startDate, "endDate": today};
     const usage = await this.handler.quadcellApiHandler(payload1, "qryusage")
 
     const customer = {
       "id": id,
+      "email": subFromDb?.email,
       "imsi": imsi,
       "iccid": subFromDb?.iccid,
       "planCode": subFromDb?.planCode,
+      "msisdn": subFromDb?.msisdn,
       "expiryTime": sub.expTime,
       "lifeCycle": sub.lifeCycle,
       "validity": sub.validity,
@@ -66,6 +67,7 @@ export class SubscriberService {
       "usageList": usage?.usageList,
       "qr": `https://api.m-mobile.net/uploads/QR/${sub.iccid}.png`, 
     }
+
     return customer;
 
   }
@@ -76,10 +78,12 @@ export class SubscriberService {
     return response;
   }
 
-  async deleteSubscriber(): Promise<any> {
-    const payload = {"authKey":"M!m9icN#","imsi":"454070059289775"};
-    const response = await this.handler.quadcellApiHandler(payload, "delsub");
-    return response;
+  async deleteSubscriber(imsi: any): Promise<any> {
+    // const payload = {"authKey":"M!m9icN#","imsi":"454070059289775"};
+    // const response = await this.handler.quadcellApiHandler(payload, "delsub");
+    // return response;
+    console.log(imsi)
+    return {"succes": true}
   }
 
   async queryPackageList(): Promise<any> {
@@ -94,9 +98,11 @@ export class SubscriberService {
     const payload = {"authKey": "M!m9icN#", "imsi": "454070059289775", "beginDate": startDate, "endDate": today};
     return this.handler.quadcellApiHandler(payload, "qryusage")
   }
-  async deletePackage(): Promise<any> {
-    const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "822144" };
-    const response = await this.handler.quadcellApiHandler(payload, "delpack");
-    return response;
+  async deletePackage(payload:any): Promise<any> {
+    // const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "822144" };
+    // const response = await this.handler.quadcellApiHandler(payload, "delpack");
+    // return response;
+    console.log(payload);
+    return {"succes": true}
   }
 }

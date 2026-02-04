@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post } from '@nestjs/common';
 import { SubscriberService } from './subscriber.service';
 
 @Controller('subscriber')
@@ -20,9 +20,9 @@ export class SubscriberController {
         return this.subscriberService.getSubscriber();
     }
 
-    @Get('del-sub')
-    async deleteSubscriber(){
-        return this.subscriberService.deleteSubscriber();
+    @Delete('del-sub')
+    async deleteSubscriber(@Body() imsi: any){
+        return this.subscriberService.deleteSubscriber(imsi);
     }
 
     @Get("query-pack-list")
@@ -33,9 +33,9 @@ export class SubscriberController {
     async queryUsage(){
         return this.subscriberService.queryUsage();
     }
-    @Get("delete-pack")
-    async deletePackage(){
-        return this.subscriberService.deletePackage();
+    @Delete("delete-pack")
+    async deletePackage(@Body() payload: any){
+        return this.subscriberService.deletePackage(payload);
     }
     @Get(":id")
     async subscriberWithId(@Param('id') id: string, @Headers('x-customer-email') customerEmail: string,){

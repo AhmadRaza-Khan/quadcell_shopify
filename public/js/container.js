@@ -9,8 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("container");
   setLoading(true, container)
   const dataMap = {
-    "Today": "/order/orders-today",
-    "All": "/order/orders-all",
+    "Subscribers": "/subscriber/all-sub",
     "E-Sims": "/sim/e-sims",
     "P-Sims": "/sim/p-sims",
     "IMSI TYPE 45400": "/product/imsi-45400",
@@ -53,12 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
   (async function loadDefault() {
     setLoading(true, container)
     try {
-      const res = await fetch(dataMap["Today"]);
+      const res = await fetch(dataMap["Subscribers"]);
       const data = await res.json();
-      renderData("Today", data);
+      renderData("Subscribers", data);
     } catch (err) {
       console.error("Error loading default data:", err);
-      container.innerHTML = `<p class="text-red-500">Error loading default orders.</p>`;
+      container.innerHTML = `<p class="text-red-500">Error loading default Subscribers.</p>`;
     } finally {
       setLoading(false, container)
     }

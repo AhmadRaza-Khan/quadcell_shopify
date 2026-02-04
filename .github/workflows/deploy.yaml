@@ -42,7 +42,7 @@ jobs:
             npm ci
             npm run build:css
             npx prisma generate
-            npx prisma migrate deploy
+            npx prisma db push
             npx nest build
 
             pm2 restart shopify-quadcell

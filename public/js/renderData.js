@@ -7,10 +7,10 @@
     let rows = [];
     let headingText = "";
 
-    // Orders
-    if (["Today", "All"].includes(tab)) {
-      const orders = data ?? [];
-      if (!orders.length) {
+    // Subscription
+    if (["Subscribers"].includes(tab)) {
+      const subscriber = data ?? [];
+      if (!subscriber.length) {
         container.innerHTML = `
           <div class="h-full w-full">
             <h2 class="text-xl text-[#00ffff] text-center font-bold mb-4">${tab}</h2>
@@ -19,11 +19,11 @@
         `;
         return;
       }
-      headingText = `${tab} Orders`;
-      headers.push("#", ...Orders.headers.map(capitalize));
-      rows = orders.map((order, idx) => [
+      headingText = `${tab} Subscriber`;
+      headers.push("#", ...Subscribers.headers.map(capitalize));
+      rows = subscriber.map((subscriber, idx) => [
         idx + 1,
-        ...Orders.headers.map(h => order[h] ?? "")
+        ...Subscribers.headers.map(h => subscriber[h] ?? "")
       ]);
     }
 
@@ -88,6 +88,15 @@
     const tbody = document.createElement("tbody");
     rows.forEach(row => {
       const tr = document.createElement("tr");
+
+      if (["Subscribers"].includes(tab)) {
+      tr.classList.add("cursor-pointer");
+      tr.addEventListener("click", () => {
+        const sub = data.find((p) => p.imsi === row[2]);
+        OpenSubscriber(sub);
+        document.getElementById("prod_modal").showModal();
+      });
+    }
 
       row.forEach(col => {
         const td = document.createElement("td");

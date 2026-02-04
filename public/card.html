@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+  <title>Login</title>
+</head>
+<body class="flex justify-center items-center min-h-screen text-[#00ffff]">
+
+<dialog id="prod_modal1" class="modal">
+  <div class="modal-box shadow-lg shadow-[#00ffff]">
+    <form method="dialog">
+      <button id="close-btn" class="btn btn-md btn-circle btn-ghost z-50 absolute right-2 top-2">✕</button>
+    </form>
+
+        <!-- card -->
+    <div id="card" class="card bg-base-100 shadow-sm">
+
+
+        <div class="card card-side bg-base-100 shadow-sm">
+            <figure>
+                <img
+                src="https://api.m-mobile.net/uploads/QR/8985207220057816325.png"
+                alt="Movie" />
+            </figure>
+            <div class="card-body">
+                <h4 class="card-title">devkraft1@gmail.com</h4>
+                <p>Imsi: 454070059289775p>
+                <p>Iccid: 8985207220057816325</</p>
+                <p>Plan Code: 820025</p>
+                <p>Effective Time: 05 December, 2025</p>
+                <p>expiryTime: 20501231235959 </p>
+                <p>Validity: 1 Day</p>
+                <div class="card-actions justify-end">
+                <button class="btn btn-primary btn-xs">Delete Profile</button>
+                <button class="btn btn-primary btn-xs">Delete Plan</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script>
+    document.getElementById("prod_modal1").showModal();
+</script>
+
+</body>
+</html>
