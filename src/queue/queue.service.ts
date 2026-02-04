@@ -1,31 +1,99 @@
-import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import { ORDER_QUEUE } from './queue.constants';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { QuadcellCryptoService } from 'src/qc-crypto/qc-crypto.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { HandlerService } from 'src/handler/handler.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class QueueService {
   constructor(
-    @InjectQueue(ORDER_QUEUE)
-    private readonly queue: Queue,
+    private readonly prisma: PrismaService,
+        private readonly quadcellCrypto: QuadcellCryptoService,
+        private handler: HandlerService
   ) {}
 
-  async addOrderJob(orderPayload: any): Promise<void> {
-    await this.queue.add(
-      'process-order',
-      orderPayload,
-      {
-        jobId: `order-${orderPayload.id}`,
+    @Cron('* * * * *')
+    async handleOrder() {
+      const pendingOrders = await this.prisma.order.findMany({
+        where: { status: false}
+      })
 
-        attempts: 5,
-        backoff: {
-          type: 'exponential',
-          delay: 5000,
-        },
-
-        removeOnComplete: 100,
-        removeOnFail: 50,
-      },
-    );
-  }
+      for (const order of pendingOrders) {    
+        try {
+          const sku = order.productSku;
+          const [id, type] = sku.split('-');
+          const simType = type === 'ESIM' ? 'e-sim' : 'p-sim';
+    
+          const plan = await this.prisma.product.findFirst({
+            where: { sku: id },
+          });
+    
+          const sim = await this.prisma.esim.findFirst({
+            where: {
+              isActive: true,
+              type: simType,
+              imsi: { startsWith: String(plan?.imsi) },
+            },
+            orderBy: { id: 'asc' },
+          });
+    
+            const payload ={
+              authKey: process.env.API_AUTH_KEY,
+              imsi: sim?.imsi,
+              iccid: sim?.iccid,
+              msisdn: sim?.msisdn,
+              planCode: plan?.planCode,
+              validity: plan?.lifeCycle,
+            }
+    
+          const response = await this.handler.quadcellApiHandler(payload, "addsub");
+          if(response.retCode != "000000"){
+            console.log("Could not create package due to: ", response.retMesg);
+            return {"message": "Could not create package"}
+          }
+    
+          const payld = {
+            authKey: process.env.API_AUTH_KEY,
+            imsi: sim?.imsi,
+            packCode: String(plan?.packCode)
+          }
+    
+          const res = await this.handler.quadcellApiHandler(payld, "v2/addpack");
+          if(res.retCode != "000000"){
+            console.log("Could not create package due to: ", res.retMesg);
+            return {"message": "Could not create package"}
+          }
+    
+          await this.prisma.esim.update({
+            where: { id: sim?.id },
+            data: { isActive: true },
+          });
+    
+          await this.prisma.subscriber.update({
+            where: {
+                customerId: order.customerId
+            },
+            data: {
+                imsi: sim?.imsi,
+                iccid: sim?.iccid,
+                msisdn: sim?.msisdn,
+                planCode: String(plan?.planCode),
+            }
+          })
+          await this.prisma.order.update({
+            where: { orderId: order.id },
+            data: { status: true }
+          })
+    
+        return {success: true};
+    
+        } catch (error) {
+          await this.prisma.failure.create({
+              data: { jsonPayload: error.message },
+            });
+          console.error('Retryable error:', error);
+          throw error;
+        }
+      }
+    }
 }

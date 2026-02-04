@@ -18,11 +18,12 @@ export class SubscriberService {
 
 
   async registerAccountWebhook(payload: any) {
-    await this.prisma.subscriber.create({
+    const resp = await this.prisma.subscriber.create({
       data: {
         customerId: String(payload.id),
       },
     });
+    console.log(resp)
     return {message: "Webhook recieved", status: 200, success: true};
   }
   

@@ -10,14 +10,13 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser());
-  // app.enableCors({
-  // origin: ["http://localhost:5173"],
-  // methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // credentials: true,
-  // });
   app.use(bodyParser.json({ verify: (req: any, _res, buf) => {
     req.rawBody = buf;
   }}));
+  app.enableCors({
+    origin: 'https://m-mobile.net',
+    methods: 'GET, HEAD, OPTIONS',
+  });
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

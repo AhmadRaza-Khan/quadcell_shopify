@@ -40,7 +40,7 @@ import { HandlerModule } from './handler/handler.module';
     SimModule,
     OrderModule,
     QueueModule,
-    HandlerModule
+    HandlerModule,
   ],
   providers: [ProductService],
   controllers: [ProductController],

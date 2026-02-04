@@ -18,14 +18,22 @@ export class OrderService {
   constructor(
     private readonly config: ConfigService,
     private prisma: PrismaService,
-    private readonly queueService: QueueService
+    private readonly queueService: QueueService,
   ){
           this.shop = this.config.get<string>("SHOPIFY_URL")!;
           this.token = this.config.get<string>("SHOPIFY_ACCESS_TOKEN")!;
   }
 
   async orderWebhook(payload: any) {
-      await this.queueService.addOrderJob(payload);
+      await this.prisma.order.upsert({
+          where:{orderId: String(payload.id)},
+          create: {
+            orderId: String(payload.id),
+            customerId: String(payload.customer.id),
+            productSku: payload.line_items[0].sku,
+          },
+          update: {}
+        });
       return {message: "Webhook received", status: 200, success: true};
   }
 
@@ -141,6 +149,6 @@ async listWebhooks() {
   }
 
   async testData(): Promise<any>{
-    return await this.prisma.subscriber.findMany({})
+    return this.prisma.subscriber.findMany({});
   }
 }
