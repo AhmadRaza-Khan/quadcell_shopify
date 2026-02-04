@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { Worker, Job } from 'bullmq';
 import { ORDER_QUEUE } from './queue.constants';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -40,10 +40,17 @@ export class OrderConsumer implements OnModuleInit {
   }
 
   private async handleOrder(orderPayload: any) {
-
-    await this.prisma.failure.create({
-      data: {jsonPayload: orderPayload}
+    if(!orderPayload.id){
+      console.log("no order id found");
+      return;
+    }
+    const order = await this.prisma.order.findUnique({
+      where: { orderId: orderPayload.id }
     })
+    if(order?.status){
+      console.log("order already processed!");
+      return {"message": "Order aleady processed", "status": true}
+    }
 
     try {
       const sku = orderPayload.line_items[0].sku;
@@ -55,28 +62,43 @@ export class OrderConsumer implements OnModuleInit {
       });
 
       if (!plan) {
-        throw new NonRetryableError('Plan not found');
+        await this.prisma.failure.create(
+          {data:{
+            customerId: orderPayload.customer.id,
+            message: "Plan not found"
+          }
+        })
+        console.log("Plan not found")
+        return {"Message": "Failed to create"}
       }
 
       const sim = await this.prisma.esim.findFirst({
         where: {
           isActive: true,
           type: simType,
-          imsi: { startsWith: String(plan.imsi) },
+          imsi: { startsWith: String(plan?.imsi) },
         },
         orderBy: { id: 'asc' },
       });
 
       if (!sim) {
-        throw new NonRetryableError('SIM not available');
+         await this.prisma.failure.create(
+          {data:{
+            customerId: orderPayload.customer.id,
+            message: "Sim not found"
+          }
+        })
+        return {"Message": "Failed to create"}
       }
 
-      await this.prisma.order.create({
-        data: {
+      await this.prisma.order.upsert({
+        where:{orderId: String(orderPayload.id)},
+        create: {
           orderId: String(orderPayload.id),
           customerId: String(orderPayload.customer.id),
           productSku: sku,
         },
+        update: {}
       });
  
         const payload ={
@@ -89,13 +111,21 @@ export class OrderConsumer implements OnModuleInit {
         }
 
       const response = await this.handler.quadcellApiHandler(payload, "addsub");
+
+      if(response.retCode !== "000000"){
+        throw new HttpException('Operation failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
       const payld = {
         authKey: process.env.API_AUTH_KEY,
         imsi: sim.imsi,
         packCode: String(plan.packCode)
       }
 
-      await this.handler.quadcellApiHandler(payld, "v2/addpack");
+      const res = await this.handler.quadcellApiHandler(payld, "v2/addpack");
+      if(res.retCode !== "000000"){
+        throw new HttpException('Operation failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
 
       await this.prisma.esim.update({
         where: { id: sim.id },
@@ -112,6 +142,10 @@ export class OrderConsumer implements OnModuleInit {
             msisdn: sim.msisdn,
             planCode: String(plan.planCode),
         }
+      })
+      await this.prisma.order.update({
+        where: { orderId: orderPayload.id },
+        data: { status: true }
       })
 
     return {success: true};

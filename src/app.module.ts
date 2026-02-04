@@ -31,6 +31,10 @@ import { HandlerModule } from './handler/handler.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public')
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     SubscriberModule,
     QuadcellCryptoModule,
     SimModule,

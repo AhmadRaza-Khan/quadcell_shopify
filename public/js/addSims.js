@@ -42,7 +42,7 @@ function OpenBulkOperationCard() {
           <button
             type="submit"
             class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md opacity-90 hover:opacity-100 text-black bg-[#00ffff] cursor-pointer"
-            id="submitBtn"
+            id="upload-btn"
           >
             Import Sims
           </button>
@@ -54,6 +54,7 @@ function OpenBulkOperationCard() {
 
   const form = document.getElementById('importForm');
   const closeBtn = document.getElementById("close-btn");
+  const uploadBtn = document.getElementById("upload-btn");
 
     form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -73,8 +74,8 @@ function OpenBulkOperationCard() {
     formData.append('password', password);
 
     try {
-        btn.innerText = "";
-        btn.innerHTML = `<span class="loading loading-spinner loading-sm"></span>`;
+        uploadBtn.innerText = "";
+        uploadBtn.innerHTML = `<span class="loading loading-spinner loading-sm"></span>`;
         const res = await fetch('/sim/import-sims', {
         method: 'POST',
         body: formData,
@@ -93,7 +94,7 @@ function OpenBulkOperationCard() {
         console.error(err);
         showToast("Failed to upload sims", "error");
     } finally {
-      btn.innerText = "Upload";
+      uploadBtn.innerText = "Upload";
     }
     });
 

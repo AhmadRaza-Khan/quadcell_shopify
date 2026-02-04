@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { SubscriberService } from './subscriber.service';
 
 @Controller('subscriber')
@@ -36,5 +36,9 @@ export class SubscriberController {
     @Get("delete-pack")
     async deletePackage(){
         return this.subscriberService.deletePackage();
+    }
+    @Get(":id")
+    async subscriberWithId(@Param('id') id: string){
+        return this.subscriberService.subscriberWithId(id)
     }
 }

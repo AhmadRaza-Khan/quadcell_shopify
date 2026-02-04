@@ -18,7 +18,7 @@ export class SimService {
             zipPaths: string[];
             password: string;
         }) {
-            const qrDir = join(process.cwd(), 'uploads', 'QR');
+            const qrDir = join(process.cwd(), 'public', 'uploads', 'QR');
 
             if (!fs.existsSync(qrDir)) {
             fs.mkdirSync(qrDir, { recursive: true });

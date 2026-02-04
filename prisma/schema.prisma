@@ -73,6 +73,7 @@ model Order {
 
 model Failure {
   id          String   @id @default(uuid())
-  payload     String?
+  customerId  String?
+  message     String?
   jsonPayload Json?
 }

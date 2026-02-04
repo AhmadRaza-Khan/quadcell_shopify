@@ -17,7 +17,7 @@ export class SimController {
         ],
         {
         storage: diskStorage({
-            destination: './uploads',
+            destination: './public/uploads',
             filename: (_, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
         }),
         },
