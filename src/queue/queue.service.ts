@@ -77,7 +77,7 @@ export class QueueService {
             }
           })
           await this.prisma.order.update({
-            where: { orderId: order.id },
+            where: { id: order.id },
             data: { status: true }
           })
     
