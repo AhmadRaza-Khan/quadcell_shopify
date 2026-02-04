@@ -88,7 +88,7 @@ export class SubscriberService {
     return this.handler.quadcellApiHandler(payload, "qryusage")
   }
   async deletePackage(): Promise<any> {
-    const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "820025" };
+    const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "822144" };
     const response = await this.handler.quadcellApiHandler(payload, "delpack");
     return response;
   }

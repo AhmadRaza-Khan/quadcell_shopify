@@ -141,6 +141,6 @@ async listWebhooks() {
   }
 
   async testData(): Promise<any>{
-    return await this.prisma.product.findFirst({where:{sku: "204820025822144907366"}})
+    return await this.prisma.subscriber.findMany({})
   }
 }
