@@ -16,6 +16,7 @@ async function bootstrap() {
   app.enableCors({
     origin: 'https://m-mobile.net',
     methods: 'GET, HEAD, OPTIONS',
+    allowedHeaders: ['*']
   });
 
   app.useGlobalPipes(new ValidationPipe({

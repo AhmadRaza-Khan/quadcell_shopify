@@ -31,10 +31,16 @@ export class SubscriberService {
     return await this.prisma.subscriber.findMany({});
   }
 
-  async subscriberWithId(id: any): Promise<any>{
+  async subscriberWithId(id: any, customerEmail): Promise<any>{
     const subFromDb = await this.prisma.subscriber.findFirst({
       where: {customerId: String(id)}
     })
+    if (subFromDb?.email == null){
+          await this.prisma.subscriber.update({
+          where: {customerId: id},
+          data:{email: customerEmail}
+    })
+    }
     const imsi = subFromDb?.imsi;
     const payload = {"authKey": this.apiKey,"imsi":imsi};
     const sub = await this.handler.quadcellApiHandler(payload, "qrysub");

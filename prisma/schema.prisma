@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,71 +8,70 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  username     String @unique
+  id       Int    @id @default(autoincrement())
+  username String @unique
   password String
 }
 
 model Product {
-  id                          Int      @id @default(autoincrement())
-  sku                         String      @unique
-  imsi                        Int
-  msisdn                      String
-  name                        String?
-  coverage                    String?
-  description                 String?
-  data                        String?
-  lifeCycle                   Int?
-  validityMode                String?
-  speedControlMode            String?
-  initialSpeed                String?
-  price                       Float?
-  speedControllTier1          String?
-  speedControllTier2          String?
-  planCode                    Int?
-  packCode                    Int?
-  fupCode                     Int?
-  productId                   String?
-  variantId                   String?
-  inventoryItemId             String?
-  syncStatus                  String   @default("pending")
+  id                 Int     @id @default(autoincrement())
+  sku                String  @unique
+  imsi               Int
+  msisdn             String
+  name               String?
+  coverage           String?
+  description        String?
+  data               String?
+  validityMode       String?
+  speedControlMode   String?
+  initialSpeed       String?
+  price              Float?
+  speedControllTier1 String?
+  speedControllTier2 String?
+  packCode           Int?
+  fupCode            Int?
+  productId          String?
+  variantId          String?
+  inventoryItemId    String?
+  syncStatus         String  @default("pending")
+  planCode           Int?
+  lifeCycle          Int?
 }
-
 
 model Esim {
-  id                          Int      @id @default(autoincrement())
-  imsi                        String
-  iccid                       String
-  msisdn                      String
-  lpa                         String
-  account                     String
-  type                        String
-  isActive                    Boolean @default(false)
+  id       Int     @id @default(autoincrement())
+  imsi     String
+  iccid    String
+  msisdn   String
+  lpa      String
+  account  String
+  isActive Boolean @default(false)
+  type     String
 }
 
-
 model Subscriber {
-  id                          Int      @id @default(autoincrement())
-  customerId                  String      @unique
-  imsi                        String?
-  iccid                       String?
-  msisdn                      String?
-  planCode                    String?
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  customerId String   @unique
+  email      String?
+  imsi       String?
+  iccid      String?
+  msisdn     String?
+  planCode   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Order {
-  id          String   @id @default(uuid())
-  orderId     String @unique
-  customerId  String
-  productSku  String
-  status      Boolean @default(false)
+  id         String  @id @default(uuid())
+  orderId    String  @unique
+  customerId String
+  productSku String
+  status     Boolean @default(false)
 }
 
 model Failure {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
+  jsonPayload Json?
   customerId  String?
   message     String?
-  jsonPayload Json?
 }
