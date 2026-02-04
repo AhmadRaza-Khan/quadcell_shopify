@@ -35,6 +35,10 @@ export class SubscriberService {
     const subFromDb = await this.prisma.subscriber.findFirst({
       where: {customerId: String(id)}
     })
+
+    if(!subFromDb?.imsi){
+      return {"success": true, "status": 200, "message": "You are not subscribed!"}
+    }
     if (subFromDb?.email == null){
           await this.prisma.subscriber.update({
           where: {customerId: id},
@@ -48,7 +52,7 @@ export class SubscriberService {
     const packList = await this.handler.quadcellApiHandler(payload, "qrypacklist");
     
     const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const startDate = packList.packList.effTime.slice(0, 6);
+    const startDate = packList.packList[0].effTime.slice(0, 6);
     const payload1 = {"authKey": this.apiKey, "imsi": imsi, "beginDate": startDate, "endDate": today};
     const usage = await this.handler.quadcellApiHandler(payload1, "qryusage")
 
