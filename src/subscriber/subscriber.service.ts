@@ -2,13 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HandlerService } from 'src/handler/handler.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { QuadcellCryptoService } from 'src/qc-crypto/qc-crypto.service';
 
 @Injectable()
 export class SubscriberService {
     private readonly apiKey: string;
     constructor(
-    private readonly quadcellCrypto: QuadcellCryptoService,
     private config: ConfigService,
     private prisma: PrismaService,
     private handler: HandlerService
@@ -48,13 +46,8 @@ export class SubscriberService {
     const imsi = subFromDb?.imsi;
     const payload = {"authKey": this.apiKey,"imsi":imsi};
     const sub = await this.handler.quadcellApiHandler(payload, "qrysub");
-
-    const packList = await this.handler.quadcellApiHandler(payload, "qrypacklist");
-    
-    const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const startDate = packList.packList[0].effTime.slice(0, 6);
-    const payload1 = {"authKey": this.apiKey, "imsi": imsi, "beginDate": startDate, "endDate": today};
-    const usage = await this.handler.quadcellApiHandler(payload1, "qryusage")
+    const payload1 = {"authKey": this.apiKey, "imsi": imsi};
+    const usage = await this.handler.quadcellApiHandler(payload1, "qrypackquota");
 
     const customer = {
       "id": id,
@@ -62,14 +55,17 @@ export class SubscriberService {
       "imsi": imsi,
       "iccid": subFromDb?.iccid,
       "planCode": subFromDb?.planCode,
+      "packCode": subFromDb?.packCode,
       "msisdn": subFromDb?.msisdn,
       "expiryTime": sub.expTime,
       "lifeCycle": sub.lifeCycle,
       "validity": sub.validity,
-      "packages": packList.packList,
-      "totalUsage": usage?.usageTotal,
-      "usageList": usage?.usageList,
-      "qr": `https://api.m-mobile.net/uploads/QR/${sub.iccid}.png`, 
+      "effTime": usage.packQuotaList[0].effTime,
+      "total": usage?.packQuotaList[0].totalQuota,
+      "consumedQuota": usage.packQuotaList[0].consumedQuota,
+      "remainingQuota": usage.packQuotaList[0].remainingQuota,
+      "planExpTime": usage.packQuotaList[0].extTime,
+      "qr": `https://api.m-mobile.net/uploads/QR/${sub.iccid}.png`,
     }
 
     return customer;

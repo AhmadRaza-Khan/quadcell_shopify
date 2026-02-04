@@ -57,6 +57,7 @@ model Subscriber {
   iccid      String?
   msisdn     String?
   planCode   String?
+  packCode   String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

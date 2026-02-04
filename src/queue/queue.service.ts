@@ -74,6 +74,7 @@ export class QueueService {
                 iccid: sim?.iccid,
                 msisdn: sim?.msisdn,
                 planCode: String(plan?.planCode),
+                packCode: String(plan?.packCode)
             }
           })
           await this.prisma.order.update({
