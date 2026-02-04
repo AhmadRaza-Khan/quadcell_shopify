@@ -58,7 +58,7 @@ export class SubscriberService {
       "packages": packList.packList,
       "totalUsage": usage?.usageTotal,
       "usageList": usage?.usageList,
-      "qr": `/uploads/products/${sub.iccid}.png`, 
+      "qr": `https://api.m-mobile.net/uploads/QR/${sub.iccid}.png`, 
     }
     return customer;
 
