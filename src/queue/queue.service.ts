@@ -46,11 +46,7 @@ export class QueueService {
               validity: plan?.lifeCycle,
             }
     
-          const response = await this.handler.quadcellApiHandler(payload, "addsub");
-          if(response.retCode != "000000"){
-            console.log("Could not create package due to: ", response.retMesg);
-            return {"message": "Could not create package"}
-          }
+          await this.handler.quadcellApiHandler(payload, "addsub");
     
           const payld = {
             authKey: process.env.API_AUTH_KEY,
