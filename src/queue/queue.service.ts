@@ -12,7 +12,7 @@ export class QueueService {
         private handler: HandlerService
   ) {}
 
-    @Cron('* * * * *')
+    // @Cron('* * * * *')
     async handleOrder() {
       const pendingOrders = await this.prisma.order.findMany({
         where: { status: false}
@@ -30,7 +30,7 @@ export class QueueService {
     
           const sim = await this.prisma.esim.findFirst({
             where: {
-              isActive: true,
+              isActive: false,
               type: simType,
               imsi: { startsWith: String(plan?.imsi) },
             },
