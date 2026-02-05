@@ -33,6 +33,19 @@ export class SubscriberService {
     const subFromDb = await this.prisma.subscriber.findFirst({
       where: {customerId: String(id)}
     })
+    const order = await this.prisma.order.findFirst({
+      where: {customerId: subFromDb?.customerId}
+    })
+    const fullSku = order?.productSku;
+    const sku  = fullSku?.split("-")[0];
+
+    const product = await this.prisma.product.findFirst({
+      where: { sku: sku }
+    })
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
 
     if(!subFromDb?.imsi){
       return {"success": true, "status": 200, "message": "You are not subscribed!"}
@@ -51,6 +64,9 @@ export class SubscriberService {
 
     const customer = {
       "id": id,
+      "coverage": product?.coverage,
+      "name": product?.name,
+      "description": product?.description,
       "email": subFromDb?.email,
       "imsi": imsi,
       "iccid": subFromDb?.iccid,

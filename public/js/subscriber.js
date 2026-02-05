@@ -23,6 +23,7 @@ function OpenSubscriber(sub) {
                 `
             const resp = await fetch(`/subscriber/${sub.customerId}`)
             const data = await resp.json();
+            console.log(data)
             innerCard.innerHTML = `
                     <figure>
                         <img class="h-20"

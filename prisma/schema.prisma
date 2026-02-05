@@ -18,9 +18,9 @@ model Product {
   sku                String  @unique
   imsi               Int
   msisdn             String
-  name               String?
-  coverage           String?
-  description        String?
+  name               String
+  coverage           String
+  description        String
   data               String?
   validityMode       String?
   speedControlMode   String?
@@ -28,13 +28,13 @@ model Product {
   price              Float?
   speedControllTier1 String?
   speedControllTier2 String?
-  packCode           Int?
+  packCode           String?
   fupCode            Int?
   productId          String?
   variantId          String?
   inventoryItemId    String?
   syncStatus         String  @default("pending")
-  planCode           Int?
+  planCode           String?
   lifeCycle          Int?
 }
 
