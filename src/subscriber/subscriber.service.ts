@@ -80,7 +80,8 @@ export class SubscriberService {
       "total": usage?.packQuotaList[0].totalQuota,
       "consumedQuota": usage.packQuotaList[0].consumedQuota,
       "remainingQuota": usage.packQuotaList[0].remainingQuota,
-      "planExpTime": usage.packQuotaList[0].extTime,
+      "planEffTime": usage.packQuotaList[0].effTime,
+      "planExpTime": usage.packQuotaList[0].expTime,
       "qr": `https://api.m-mobile.net/uploads/QR/${sub.iccid}.png`,
     }
 
