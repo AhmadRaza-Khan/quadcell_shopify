@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { QueueService } from 'src/queue/queue.service';
@@ -149,6 +149,49 @@ async listWebhooks() {
   }
 
   async testData(): Promise<any>{
-    return this.prisma.subscriber.findMany({});
+    const toEmail = "devkraft1@gmail.com";
+    const subject = 'Your Plan is Active';
+    const bodyHtml = `<p>Your plan has been activated successfully.</p>
+                      <p><strong>Thank you for choosing us.</strong></p>`;
+    const payload = {
+      api_key: process.env.SMTP2GO_API_KEY,
+      sender: process.env.SMTP_FROM,
+      from_name: process.env.SMTP_FROM_NAME,
+      to: toEmail,
+      subject,
+      html_body: bodyHtml,
+      text_body: this.stripHtml(bodyHtml),
+    };
+
+    try {
+      const response = await fetch('https://api.smtp2go.com/v3/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (
+        response.ok &&
+        result?.data?.succeeded &&
+        result.data.succeeded > 0
+      ) {
+        return true;
+      }
+
+      console.error('SMTP2GO Email error:', result);
+      return false;
+    } catch (error) {
+      console.error('SMTP2GO Request failed:', error);
+      throw new InternalServerErrorException('Email sending failed');
+    }
   }
+
+  private stripHtml(html: string): string {
+    return html.replace(/<[^>]*>/g, '');
+  }
+
 }

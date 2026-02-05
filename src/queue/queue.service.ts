@@ -12,7 +12,7 @@ export class QueueService {
         private handler: HandlerService
   ) {}
 
-    @Cron('* * * * *')
+    // @Cron('* * * * *')
     async handleOrder() {
       const pendingOrders = await this.prisma.order.findMany({
         where: { status: false}
@@ -36,6 +36,12 @@ export class QueueService {
             },
             orderBy: { id: 'asc' },
           });
+          
+          const sub = await this.prisma.subscriber.findUnique({
+            where: {
+              customerId: order.customerId
+            }
+          })
     
             const payload ={
               authKey: process.env.API_AUTH_KEY,
@@ -46,7 +52,9 @@ export class QueueService {
               validity: plan?.lifeCycle,
             }
     
-          await this.handler.quadcellApiHandler(payload, "addsub");
+          if(!sub?.imsi){
+            await this.handler.quadcellApiHandler(payload, "addsub");
+          }
     
           const payld = {
             authKey: process.env.API_AUTH_KEY,
