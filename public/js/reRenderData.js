@@ -1,7 +1,7 @@
 async function reRenderData() {
         setLoading(true, container)
     try {
-        const res = await fetch(`/product/subscriber/all-sub`);
+        const res = await fetch(`/subscriber/all-sub`);
         const freshData = await res.json();
         renderData("Subscribers", freshData);
     } catch (err) {

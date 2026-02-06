@@ -159,7 +159,8 @@ export class SubscriberService {
       }
     })
     if(!subscriber?.imsi){
-      return {"message": "Imsi not found"}
+      
+      return {"message": "Imsi not found", "success": true}
     }
     const payload = {"authKey": this.apiKey,"imsi": subscriber?.imsi, "packCode": subscriber?.packCode };
     const response = await this.handler.quadcellApiHandler(payload, "delpack");

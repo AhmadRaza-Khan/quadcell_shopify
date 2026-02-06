@@ -1,4 +1,5 @@
 function OpenSubscriber(sub) {
+  console.log(sub)
   const card = document.getElementById("main");
      function formatDate(v) {
     if (!v) return "—";
