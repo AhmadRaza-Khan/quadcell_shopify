@@ -38,6 +38,9 @@ export class SubscriberService {
     const subFromDb = await this.prisma.subscriber.findFirst({
       where: {customerId: String(customerId)}
     })
+    if(!subFromDb?.packCode){
+      return {"success": true, "status": 200, "message": "You don't have any active plan right now!"}
+    }
     const order = await this.prisma.order.findFirst({
       where: { customerId: subFromDb?.customerId },
     });
@@ -112,14 +115,16 @@ export class SubscriberService {
         customerId: id
       }
     })
+    const imsi = subscriber?.imsi
+    if(!imsi){
+      return {"message": "imsi not found", "success": false}
+    }
+
     const payload = {"authKey": this.apiKey, "imsi":subscriber?.imsi};
     const response = await this.handler.quadcellApiHandler(payload, "delsub");
     if(response.retCode == "000000"){
       await this.prisma.subscriber.delete({ where: { customerId: id}})
-      await this.prisma.esim.update({
-        where: {
-        imsi: subscriber?.imsi
-        },
+      await this.prisma.esim.update({ where: { imsi },
         data: { isActive: false }
       })
       return {"success": true}
