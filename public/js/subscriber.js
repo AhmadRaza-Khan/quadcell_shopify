@@ -71,12 +71,12 @@ function OpenSubscriber(sub) {
             <button id="del-pack" class="btn bg-[#00ffff] text-black hover:bg-black btn-outline hover:text-[#00ffff] rounded" onClick="deletePlan('${data.id}')">Delete Plan</button>
         </div>
       </div>
-`:
-`
-<span style="text-align:center;">No plan active for this subscirber!</span>
-`
-              }
-            `
+        `:
+        `
+        <span style="text-align:center;">No plan active for this subscirber!</span>
+        <button id="del-sub" class="btn bg-[#00ffff] text-black hover:bg-black hover:text-[#00ffff] btn-outline rounded" onClick="deleteSub('${data.id}')">Delete Profile</button>
+        `
+        }`
         } catch (error) {
             console.log(error)
         }

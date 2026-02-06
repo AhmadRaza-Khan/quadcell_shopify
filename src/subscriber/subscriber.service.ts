@@ -39,7 +39,7 @@ export class SubscriberService {
       where: {customerId: String(customerId)}
     })
     if(!subFromDb?.packCode){
-      return {"success": true, "status": 200, "message": "You don't have any active plan right now!"}
+      return {"success": true, "status": 200, "message": "You don't have any active plan right now!", "id": customerId}
     }
     const order = await this.prisma.order.findFirst({
       where: { customerId: subFromDb?.customerId },
