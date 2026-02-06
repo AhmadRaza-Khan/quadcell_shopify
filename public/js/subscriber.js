@@ -92,6 +92,7 @@ async function deletePlan(id){
     })
     const data = await response.json();
     if(data.success){
+      reRenderData()
       showToast("Plan deleted successfully", "success")
     }
    } catch (error) {
@@ -109,7 +110,10 @@ async function deleteSub(id) {
      method: "DELETE",
     })
     const data = await response.json();
-    if(data.success){ document.getElementById("cls-btn").click() }
+    if(data.success){
+       document.getElementById("cls-btn").click();
+       reRenderData(); 
+      }
    } catch (error) {
     console.log(error)
     showToast("Failer to delete subscriber", "error");

@@ -118,7 +118,8 @@ export class SubscriberService {
     })
     const imsi = subscriber?.imsi
     if(!imsi){
-      return {"message": "imsi not found", "success": false}
+      await this.prisma.subscriber.delete({where: { customerId: id}})
+      return {"message": "Subscriber deleted", "success": true}
     }
 
     const payload = {"authKey": this.apiKey, "imsi":subscriber?.imsi};
