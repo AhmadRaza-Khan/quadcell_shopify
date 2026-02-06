@@ -62,12 +62,6 @@ export class SubscriberService {
     if(!subFromDb?.imsi){
       return {"success": true, "status": 200, "message": "You are not subscribed!"}
     }
-    if (subFromDb?.email == null){
-          await this.prisma.subscriber.update({
-          where: {customerId: id},
-          data:{email: customerEmail}
-    })
-    }
     const imsi = subFromDb?.imsi;
     const payload = {"authKey": this.apiKey,"imsi":imsi};
     const sub = await this.handler.quadcellApiHandler(payload, "qrysub");
