@@ -32,9 +32,15 @@ export class SubscriberService {
   async subscriberWithId(customerId: any, customerEmail: string): Promise<any>{
     await this.prisma.subscriber.upsert({
       where: { customerId },
-      create: { customerId, email: customerEmail},
-      update: {}
+      create: {
+        customerId,
+        email: customerEmail,
+      },
+      update: {
+        email: customerEmail,
+      },
     })
+
     const subFromDb = await this.prisma.subscriber.findFirst({
       where: {customerId: String(customerId)}
     })
@@ -159,7 +165,7 @@ export class SubscriberService {
       }
     })
     if(!subscriber?.imsi){
-      
+
       return {"message": "Imsi not found", "success": true}
     }
     const payload = {"authKey": this.apiKey,"imsi": subscriber?.imsi, "packCode": subscriber?.packCode };
