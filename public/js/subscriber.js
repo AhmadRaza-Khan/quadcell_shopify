@@ -73,8 +73,10 @@ function OpenSubscriber(sub) {
       </div>
         `:
         `
+        <div class="flex flex-col gap-5 justify-center items-center">
         <span style="text-align:center;">No plan active for this subscirber!</span>
         <button id="del-sub" class="btn bg-[#00ffff] text-black hover:bg-black hover:text-[#00ffff] btn-outline rounded" onClick="deleteSub('${data.id}')">Delete Profile</button>
+        </div>
         `
         }`
         } catch (error) {
