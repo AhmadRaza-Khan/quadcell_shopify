@@ -94,7 +94,7 @@
       tr.addEventListener("click", () => {
         const sub = data.find((p) => p.imsi === row[2]);
         OpenSubscriber(sub);
-        document.getElementById("prod_modal").showModal();
+        document.getElementById("my_modal_4").showModal();
       });
     }
 

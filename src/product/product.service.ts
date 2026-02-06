@@ -95,10 +95,19 @@ export class ProductService {
         : String(v);
 
     const SIM_TYPES = [
-      { label: 'E-SIM', code: 'ESIM' },
-      { label: 'Physical SIM', code: 'PSIM' },
+      {
+        label: 'E-SIM',
+        code: 'ESIM',
+        weight: 0,
+        requiresShipping: false,
+      },
+      {
+        label: 'Physical SIM',
+        code: 'PSIM',
+        weight: 0.01,
+        requiresShipping: true,
+      },
     ];
-
 
     const products = await this.prisma.product.findMany({
       where: { syncStatus: 'pending' },
@@ -135,19 +144,25 @@ export class ProductService {
     for (const p of groupProducts) {
       for (const simType of SIM_TYPES) {
         variants.push({
-          price: String(p.price ?? 0.00),
+          price: String(p.price ?? 0.0),
 
           // SKU must be unique
-          sku: `${p.sku}-${simType.code === 'ESIM' ? 'ESIM' : 'PSIM'}`,
+          sku: `${p.sku}-${simType.code}`,
 
           option1: simType.label,
           option2: p.name,
 
           inventory_management: 'shopify',
           inventory_quantity: 100,
+
+          // ✅ SHIPPING & WEIGHT
+          weight: simType.weight,
+          weight_unit: 'kg',
+          requires_shipping: simType.requiresShipping,
         });
       }
     }
+
 
     // Product description
     const body_html = groupProducts

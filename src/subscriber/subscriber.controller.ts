@@ -20,9 +20,9 @@ export class SubscriberController {
         return this.subscriberService.getSubscriber();
     }
 
-    @Delete('del-sub')
-    async deleteSubscriber(@Body() imsi: any){
-        return this.subscriberService.deleteSubscriber(imsi);
+    @Delete('del-sub/:id')
+    async deleteSubscriber(@Param("id") id: any){
+        return this.subscriberService.deleteSubscriber(id);
     }
 
     @Get("query-pack-list")
@@ -33,9 +33,9 @@ export class SubscriberController {
     async queryUsage(){
         return this.subscriberService.queryUsage();
     }
-    @Delete("delete-pack")
-    async deletePackage(@Body() payload: any){
-        return this.subscriberService.deletePackage(payload);
+    @Delete("delete-pack/:id")
+    async deletePackage(@Param("id") id: any){
+        return this.subscriberService.deletePackage(id);
     }
     @Get(":id")
     async subscriberWithId(@Param('id') id: string, @Headers('x-customer-email') customerEmail: string,){
