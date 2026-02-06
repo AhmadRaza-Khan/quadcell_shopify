@@ -29,18 +29,30 @@ export class SubscriberService {
     return await this.prisma.subscriber.findMany({});
   }
 
-  async subscriberWithId(id: any, customerEmail): Promise<any>{
+  async subscriberWithId(customerId: any, customerEmail): Promise<any>{
     const subFromDb = await this.prisma.subscriber.findFirst({
-      where: {customerId: String(id)}
+      where: {customerId: String(customerId)}
     })
     const order = await this.prisma.order.findFirst({
-      where: {customerId: subFromDb?.customerId}
-    })
-    const fullSku = order?.productSku;
-    const sku  = fullSku?.split("-")[0];
+      where: { customerId: subFromDb?.customerId },
+    });
+
+    const sku = order?.productSku;
+
+    if (!sku) {
+      return { message: 'No sku found' };
+    }
+
+    const [id, type] = sku.split('-');
+
+    if (!id || !type) {
+      return { message: 'Invalid sku format' };
+    }
+
+    const simType = type === 'ESIM' ? 'e-sim' : 'p-sim';
 
     const product = await this.prisma.product.findFirst({
-      where: { sku: sku }
+      where: { sku: id }
     })
 
     if (!product) {
@@ -63,11 +75,12 @@ export class SubscriberService {
     const usage = await this.handler.quadcellApiHandler(payload1, "qrypackquota");
 
     const customer = {
-      "id": id,
+      "id": customerId,
       "coverage": product?.coverage,
       "name": product?.name,
       "description": product?.description,
       "email": subFromDb?.email,
+      "simType": simType,
       "imsi": imsi,
       "iccid": subFromDb?.iccid,
       "planCode": subFromDb?.planCode,
@@ -86,29 +99,6 @@ export class SubscriberService {
     }
 
     return customer;
-
-//     return {
-//   "id": "8741188829274",
-//   "coverage": "Austria",
-//   "name": "Austria - Daily Unlimited",
-//   "description": "Unlimited Data (1 Day), Full Speeds (Best Rate)",
-//   "email": "devkraft1@gmail.com",
-//   "imsi": "454070059289775",
-//   "iccid": "8985207220057816325",
-//   "planCode": "820025",
-//   "packCode": "822144",
-//   "msisdn": "852193011425267",
-//   "expiryTime": "20501231235959",
-//   "lifeCycle": "0",
-//   "validity": "1",
-//   "effTime": "20260204215001",
-//   "total": "UNLIMITED",
-//   "consumedQuota": "0.00",
-//   "remainingQuota": "UNLIMITED",
-//   "planEffTime": "20260204215001",
-//   "planExpTime": "20530620235959",
-//   "qr": "https://api.m-mobile.net/uploads/QR/8985207220057816325.png"
-// };
 
   }
 
