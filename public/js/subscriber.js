@@ -12,8 +12,11 @@ function OpenSubscriber(sub) {
             `
             const resp = await fetch(`/subscriber/${sub.customerId}`)
             const data = await resp.json();
+
             card.innerHTML = `
-        <div style="background:black;padding:28px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);">
+              ${
+                data.packCode ? 
+                `<div style="background:black;padding:28px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);">
         
         <h3 style="margin:0 0 6px;">${data.name}</h3>
         <p style="color:#fff;margin:0 0 20px;">${data.description}</p>
@@ -68,7 +71,11 @@ function OpenSubscriber(sub) {
             <button id="del-pack" class="btn bg-[#00ffff] text-black hover:bg-black btn-outline hover:text-[#00ffff] rounded" onClick="deletePlan('${data.id}')">Delete Plan</button>
         </div>
       </div>
-
+`:
+`
+<span style="text-align:center;">No plan active for this subscirber!</span>
+`
+              }
             `
         } catch (error) {
             console.log(error)
