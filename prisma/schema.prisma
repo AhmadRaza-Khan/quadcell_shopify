@@ -40,7 +40,7 @@ model Product {
 
 model Esim {
   id       Int     @id @default(autoincrement())
-  imsi     String
+  imsi     String  @unique
   iccid    String
   msisdn   String
   lpa      String

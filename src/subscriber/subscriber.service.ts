@@ -29,7 +29,12 @@ export class SubscriberService {
     return await this.prisma.subscriber.findMany({});
   }
 
-  async subscriberWithId(customerId: any, customerEmail): Promise<any>{
+  async subscriberWithId(customerId: any, customerEmail: string): Promise<any>{
+    await this.prisma.subscriber.upsert({
+      where: { customerId },
+      create: { customerId, email: customerEmail},
+      update: {}
+    })
     const subFromDb = await this.prisma.subscriber.findFirst({
       where: {customerId: String(customerId)}
     })
@@ -92,8 +97,6 @@ export class SubscriberService {
       "qr": `https://api.m-mobile.net/uploads/QR/${sub.iccid}.png`,
     }
 
-    return customer;
-
   }
 
   async getSubscriber(): Promise<any> {
@@ -103,11 +106,30 @@ export class SubscriberService {
   }
 
   async deleteSubscriber(id: any): Promise<any> {
-    // const payload = {"authKey":"M!m9icN#","imsi":"454070059289775"};
-    // const response = await this.handler.quadcellApiHandler(payload, "delsub");
-    // return response;
-    console.log(id)
-    return {"succes": true}
+    try {
+      const subscriber = await this.prisma.subscriber.findFirst({
+      where: {
+        customerId: id
+      }
+    })
+    const payload = {"authKey": this.apiKey, "imsi":subscriber?.imsi};
+    const response = await this.handler.quadcellApiHandler(payload, "delsub");
+    if(response.retCode == "000000"){
+      await this.prisma.subscriber.delete({ where: { customerId: id}})
+      await this.prisma.esim.update({
+        where: {
+        imsi: subscriber?.imsi
+        },
+        data: { isActive: false }
+      })
+      return {"success": true}
+    } else {
+      return {"success": false, "message": "Failed to delete subscriber!"}
+    }
+    } catch (error) {
+      console.log(error.message)
+      return {"success": false, "message": error.message}
+    }
   }
 
   async queryPackageList(): Promise<any> {
@@ -123,10 +145,29 @@ export class SubscriberService {
     return this.handler.quadcellApiHandler(payload, "qryusage")
   }
   async deletePackage(id:any): Promise<any> {
-    // const payload = {"authKey":"M!m9icN#","imsi":"454070059289775", "packCode": "822144" };
-    // const response = await this.handler.quadcellApiHandler(payload, "delpack");
-    // return response;
-    console.log(id);
-    return {"succes": true}
+    try {
+      const subscriber = await this.prisma.subscriber.findFirst({
+      where: {
+        customerId: id
+      }
+    })
+    if(!subscriber?.imsi){
+      return {"message": "Imsi not found"}
+    }
+    const payload = {"authKey": this.apiKey,"imsi": subscriber?.imsi, "packCode": subscriber?.packCode };
+    const response = await this.handler.quadcellApiHandler(payload, "delpack");
+    if(response.retCode == "000000"){
+      await this.prisma.subscriber.update({
+        where: { customerId: id },
+        data: { packCode: null }
+      })
+      return {"success": true}
+    } else {
+      return {"success": false, "message": "Failed to delete plan!"}
+    }
+    } catch (error) {
+      console.log(error.message)
+      return {"success": false, "message": error.message}
+    }
   }
 }
