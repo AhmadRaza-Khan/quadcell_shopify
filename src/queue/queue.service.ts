@@ -12,7 +12,7 @@ export class QueueService {
         private handler: HandlerService
   ) {}
 
-    @Cron('* * * * *')
+    // @Cron('* * * * *')
     async handleOrder() {
       const pendingOrders = await this.prisma.order.findMany({
         where: { status: false}

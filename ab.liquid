@@ -1,0 +1,27 @@
+{% if customer %}
+  {% assign raw_iccids = customer.metafields.custom.sim.value %}
+  {% assign iccids = raw_iccids | parse_json %}
+{% endif %}
+
+{% if iccids and iccids.size > 0 %}
+  <div class="sim-choice">
+    <label>
+      <input type="radio" name="properties[sim_option]" value="existing" checked>
+      Use existing SIM
+    </label>
+
+    <label for="iccidSelect">ICCID:</label>
+    <select name="properties[selected_iccid]" id="iccidSelect">
+      {% for iccid in iccids %}
+        <option value="{{ iccid | strip }}">{{ iccid | strip }}</option>
+      {% endfor %}
+    </select>
+
+    <label>
+      <input type="radio" name="properties[sim_option]" value="new">
+      Get a new SIM
+    </label>
+  </div>
+{% else %}
+  <input type="hidden" name="properties[sim_option]" value="new">
+{% endif %}

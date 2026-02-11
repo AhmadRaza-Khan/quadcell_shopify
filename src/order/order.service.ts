@@ -25,15 +25,18 @@ export class OrderService {
   }
 
   async orderWebhook(payload: any) {
-      await this.prisma.order.upsert({
-          where:{orderId: String(payload.id)},
-          create: {
-            orderId: String(payload.id),
-            customerId: String(payload.customer.id),
-            productSku: payload.line_items[0].sku,
-          },
-          update: {}
-        });
+    await this.prisma.failure.create({
+      data: { jsonPayload: payload}
+    })
+      // await this.prisma.order.upsert({
+      //     where:{orderId: String(payload.id)},
+      //     create: {
+      //       orderId: String(payload.id),
+      //       customerId: String(payload.customer.id),
+      //       productSku: payload.line_items[0].sku,
+      //     },
+      //     update: {}
+      //   });
       return {message: "Webhook received", status: 200, success: true};
   }
 

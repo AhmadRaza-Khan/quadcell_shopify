@@ -270,12 +270,88 @@ async getImsi45407(res){
        });
        return res.json({"success": true, "products": products})
 }
-async test(res){
-       const products = await this.prisma.product.findMany({
-        where: {
-           syncStatus: "pending"
-         }
-       });
-       return res.json({"success": true, "products": products.length})
+async test(res: any) {
+  const customerId = "8741188829274";
+  const newIccid = "8985211116108993460"
+  const baseUrl = `${this.shopifyUrl}/admin/api/2024-01`;
+
+  // ✅ TypeScript-safe headers
+  const headers: Record<string, string> = {
+    'X-Shopify-Access-Token': this.accessToken || '',
+    'Content-Type': 'application/json'
+  };
+
+  // 1️⃣ Fetch existing metafield
+  const getRes = await fetch(
+    `${baseUrl}/customers/${customerId}/metafields.json?namespace=custom&key=sim`,
+    { headers }
+  );
+
+  if (!getRes.ok) {
+    console.log(getRes.statusText)
+    return (`Failed to fetch metafields: ${getRes.status} ${getRes.statusText}`);
+  }
+
+  const getData = await getRes.json();
+  console.log(getData.metafields[0].value.trim())
+  const metafield = getData.metafields?.[0];
+
+  // 2️⃣ Parse existing IMSIs
+  let imsis: string[] = [];
+  if (metafield?.value) {
+    try {
+      imsis = JSON.parse(metafield.value);
+    } catch {
+      imsis = [];
+    }
+  }
+
+  // 3️⃣ Append new IMSI if not duplicate
+  if (!imsis.includes(newIccid)) {
+    imsis.push(newIccid);
+  }
+
+  const payload = {
+    metafield: {
+      namespace: "custom",                 // matches Shopify default for your UI
+      key: "sim",                          // auto-generated from Name in Admin UI
+      type: "list.single_line_text_field", // List of strings
+      value: JSON.stringify(imsis)         // Shopify expects stringified JSON array
+    }
+  };
+
+  // 4️⃣ Update if exists, else create
+  if (metafield?.id) {
+    const updateRes = await fetch(`${baseUrl}/metafields/${metafield.id}.json`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(payload)
+    });
+    const upJson = await updateRes.json();
+    console.log("upJson: ", upJson)
+
+    if (!updateRes.ok) {
+      console.log(updateRes.statusText)
+      return (`Failed to update metafield: ${updateRes.status} ${updateRes.statusText}`);
+    }
+  } else {
+    const createRes = await fetch(`${baseUrl}/customers/${customerId}/metafields.json`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload)
+    });
+    const crJson = await createRes.json();
+    console.log("crJson: ", crJson);
+
+    if (!createRes.ok) {
+      console.log(createRes.statusText)
+      return (`Failed to create metafield: ${createRes.status} ${createRes.statusText}`);
+    }
+  }
+
+  return (`IMSI ${newIccid} appended for customer ${customerId}`);
 }
+
+
+
 }
